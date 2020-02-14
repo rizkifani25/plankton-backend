@@ -5,9 +5,20 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 
+// main
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/user/users");
 const registerRouter = require("./routes/user/register");
+const loginRouter = require("./routes/user/login");
+
+// alpro icons
+const alproIconsRouter = require("./routes/alpro/list_alpro_icons");
+
+// categories alpro
+const alproCatCableRouter = require("./routes/alpro/list_alpro_cat_cable");
+const alproCatODPRouter = require("./routes/alpro/list_alpro_cat_odp");
+const alproCatODCRouter = require("./routes/alpro/list_alpro_cat_odc");
+const alproCatPostRouter = require("./routes/alpro/list_alpro_cat_post");
 
 const app = express();
 
@@ -40,9 +51,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// main
 app.use(endpoint.HOME, indexRouter);
 app.use(endpoint.USERS, usersRouter);
 app.use(endpoint.REGISTER_V1, registerRouter);
+app.use(endpoint.LOGIN, loginRouter);
+
+// assets
+app.use(endpoint.LIST_ALPRO_ICONS, alproIconsRouter);
+
+// list alpro
+app.use(endpoint.LIST_ALPRO_CABLE, alproCatCableRouter);
+app.use(endpoint.LIST_ALPRO_ODC, alproCatODCRouter);
+app.use(endpoint.LIST_ALPRO_ODP, alproCatODPRouter);
+app.use(endpoint.LIST_ALPRO_POST, alproCatODPRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
