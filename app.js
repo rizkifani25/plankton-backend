@@ -24,20 +24,18 @@ const app = express();
 
 const endpoint = require("./services/api/endpoint");
 require("dotenv").config();
-
-// "mongodb+srv://" +
-//       process.env.DB_USERNAME +
-//       ":" +
-//       process.env.DB_PASSWORD +
-//       "@planktondb-jb15t.mongodb.net/" +
-//       process.env.DB_NAME
-
+// "mongodb+srv://dbPlankton:_plankton%40telkom@planktondb-jb15t.mongodb.net/dbPlankton"
 console.log(process.env.DB_NAME);
 console.log(process.env.DB_USERNAME);
 console.log(process.env.DB_PASSWORD);
 mongoose
   .connect(
-    "mongodb+srv://dbPlankton:_plankton%40telkom@planktondb-jb15t.mongodb.net/dbPlankton",
+    "mongodb+srv://" +
+      process.env.DB_USERNAME +
+      ":" +
+      process.env.DB_PASSWORD +
+      "@planktondb-jb15t.mongodb.net/" +
+      process.env.DB_NAME,
     {
       useUnifiedTopology: true,
       useNewUrlParser: true
