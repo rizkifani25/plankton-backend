@@ -25,6 +25,9 @@ const app = express();
 const endpoint = require("./services/api/endpoint");
 require("dotenv").config();
 
+console.log(process.env.DB_NAME);
+console.log(process.env.DB_USERNAME);
+console.log(process.env.DB_PASSWORD);
 mongoose
   .connect(
     "mongodb+srv://" +
