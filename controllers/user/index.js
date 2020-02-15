@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const userModel = require("../../models/user");
+const roleModel = require("../../models/role");
 
 exports.register_user = (req, res) => {
   let username = req.query.username,
@@ -58,9 +59,26 @@ exports.login_user = (req, res) => {
     .exec()
     .then(data => {
       if (data.length == 1) {
-        res.status(200).json({
-          message: "Login Success"
-        });
+        let userLevel = data[0]["user_level"];
+        let query = {
+          user_level: userLevel
+        };
+        let result;
+        roleModel
+          .find(query, { _id: 0, user_level: 0 })
+          .exec()
+          .then(datas => {
+            result = {
+              user_data: data,
+              authority: datas
+            };
+            res.status(200).send(result);
+          })
+          .catch(err => {
+            res.send({
+              message: err
+            });
+          });
       } else {
         res.status(401).json({
           status: "ERR",
