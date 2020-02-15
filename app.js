@@ -11,23 +11,18 @@ const usersRouter = require("./routes/user/users");
 const registerRouter = require("./routes/user/register");
 const loginRouter = require("./routes/user/login");
 
-// alpro icons
-const alproIconsRouter = require("./routes/alpro/list_alpro_icons");
+// alpro
+const alprosRouter = require("./routes/alpro");
+const alprosDescRouter = require("./routes/alpro-desc");
 
-// categories alpro
-const alproCatCableRouter = require("./routes/alpro/list_alpro_cat_cable");
-const alproCatODPRouter = require("./routes/alpro/list_alpro_cat_odp");
-const alproCatODCRouter = require("./routes/alpro/list_alpro_cat_odc");
-const alproCatPostRouter = require("./routes/alpro/list_alpro_cat_post");
+// list odp
+const odpRouter = require("./routes/odp/list_odp");
 
 const app = express();
 
-const endpoint = require("./services/api/endpoint");
+const endpoint = require("./services/api");
 require("dotenv").config();
 // "mongodb+srv://dbPlankton:_plankton%40telkom@planktondb-jb15t.mongodb.net/dbPlankton"
-console.log(process.env.DB_NAME);
-console.log(process.env.DB_USERNAME);
-console.log(process.env.DB_PASSWORD);
 mongoose
   .connect(
     "mongodb+srv://" +
@@ -60,14 +55,12 @@ app.use(endpoint.USERS, usersRouter);
 app.use(endpoint.REGISTER_V1, registerRouter);
 app.use(endpoint.LOGIN, loginRouter);
 
-// assets
-app.use(endpoint.LIST_ALPRO_ICONS, alproIconsRouter);
+// allpro
+app.use(endpoint.ALPROS_ICON, alprosRouter);
+app.use(endpoint.ALPRO_DESC, alprosDescRouter);
 
-// list alpro
-app.use(endpoint.LIST_ALPRO_CABLE, alproCatCableRouter);
-app.use(endpoint.LIST_ALPRO_ODC, alproCatODCRouter);
-app.use(endpoint.LIST_ALPRO_ODP, alproCatODPRouter);
-app.use(endpoint.LIST_ALPRO_POST, alproCatPostRouter);
+// odp
+app.use(endpoint.LIST_ODP, odpRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
