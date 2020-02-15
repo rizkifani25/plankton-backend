@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const { alprosModel, alproDescModel } = require("../../models/alpro");
 
 exports.alpros = (req, res) => {

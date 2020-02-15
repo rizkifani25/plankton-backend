@@ -16,11 +16,12 @@ const alprosRouter = require("./routes/alpro");
 const alprosDescRouter = require("./routes/alpro-desc");
 
 // list odp
-const odpRouter = require("./routes/odp/list_odp");
+const odpRouter = require("./routes/odp/");
 
 const app = express();
 
-const endpoint = require("./services/api");
+const endpoint = require("./services/endpoint");
+
 require("dotenv").config();
 // "mongodb+srv://dbPlankton:_plankton%40telkom@planktondb-jb15t.mongodb.net/dbPlankton"
 mongoose
