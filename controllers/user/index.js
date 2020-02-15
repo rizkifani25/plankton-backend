@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const userModel = require("../models/user_model");
+const userModel = require("../../models/user_model");
 
 exports.register_user = (req, res) => {
   let username = req.query.username,
