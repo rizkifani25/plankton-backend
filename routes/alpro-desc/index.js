@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
 
-const User = require("../../controllers/user_controller");
+const alpro = require("../../controllers/alpro");
 
-router.get("/", User.all_user);
+router.get("/", alpro.alproDesc);
 
 module.exports = router;
