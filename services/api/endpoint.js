@@ -6,7 +6,7 @@ exports.REGISTER_V1 = "/register";
 exports.LOGIN = "/login";
 
 // alpro icons
-exports.LIST_ALPRO_ICONS = "/alpro";
+exports.LIST_ALPRO_ICONS = "/alpros";
 
 // categories alpro
 exports.LIST_ALPRO_CABLE = "/alpro/cable";
