@@ -3,11 +3,13 @@ const userModel = require("../models/user_model");
 
 exports.register_user = (req, res) => {
   let username = req.query.username,
-    password = req.query.pass;
-  phone = req.query.phone;
+    password = req.query.pass,
+    phone = req.query.phone,
+    level = req.query.level;
 
   let query = {
-    reporter_name: username
+    user_name: username,
+    user_level: level
   };
 
   userModel
@@ -21,9 +23,10 @@ exports.register_user = (req, res) => {
       } else {
         let newUser = new userModel({
           _id: new mongoose.Types.ObjectId(),
-          reporter_name: username,
-          reporter_password: password,
-          reporter_phone: phone
+          user_name: username,
+          user_password: password,
+          user_phone: phone,
+          user_level: level
         });
 
         newUser.save().then(response => {
@@ -47,8 +50,8 @@ exports.login_user = (req, res) => {
   phone = req.query.phone;
 
   let query = {
-    reporter_name: username,
-    reporter_password: password
+    user_name: username,
+    user_password: password
   };
   userModel
     .find(query)
@@ -74,7 +77,7 @@ exports.login_user = (req, res) => {
 
 exports.all_user = (req, res) => {
   userModel
-    .find({}, { _id: 0, __v: 0, reporter_password: 0 })
+    .find({}, { _id: 0, __v: 0, user_password: 0 })
     .exec()
     .then(data => {
       res.send(data);
