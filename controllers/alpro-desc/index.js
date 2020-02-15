@@ -1,7 +1,7 @@
-const alprosModel = require("../../models/alpro");
+const alproDescModel = require("../../models/alpro-desc");
 
-exports.alpros = (req, res) => {
-  alprosModel
+exports.alproDesc = (req, res) => {
+  alproDescModel
     .find({})
     .exec()
     .then(data => {
