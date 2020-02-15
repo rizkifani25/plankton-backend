@@ -18,7 +18,7 @@ exports.register_user = (req, res) => {
     .then(data => {
       if (data.length == 1) {
         res.status(409).json({
-          message: "Username already existasddsadas"
+          message: "Username already exist"
         });
       } else {
         let newUser = new userModel({
