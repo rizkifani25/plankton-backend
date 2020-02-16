@@ -71,7 +71,9 @@ exports.login_user = (req, res) => {
               user_data: data,
               authority: datas
             };
-            res.status(200).send(result);
+            res.status(200).send({
+              data: result
+            });
           })
           .catch(err => {
             res.send({
@@ -96,9 +98,13 @@ exports.all_user = (req, res) => {
     .find({}, { _id: 0, __v: 0, user_password: 0 })
     .exec()
     .then(data => {
-      res.send(data);
+      res.send({
+        data: data
+      });
     })
     .catch(err => {
-      res.send(err);
+      res.send({
+        message: err
+      });
     });
 };

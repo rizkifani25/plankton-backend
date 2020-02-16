@@ -5,7 +5,9 @@ exports.allODP = (req, res) => {
     .find({})
     .exec()
     .then(data => {
-      res.status(200).send(data);
+      res.status(200).send({
+        data: data
+      });
     })
     .catch(err => {
       res.send({
