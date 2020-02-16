@@ -3,14 +3,13 @@ const userModel = require("../../models/user");
 const roleModel = require("../../models/role");
 
 exports.register_user = (req, res) => {
-  let username = req.query.username,
-    password = req.query.pass,
-    phone = req.query.phone,
-    level = req.query.level;
+  const username = req.query.username;
+  const password = req.query.pass;
+  const phone = req.query.phone;
 
-  let query = {
-    user_name: username,
-    user_level: level
+  const query = {
+    user_phone: phone,
+    user_level: 1
   };
 
   userModel
@@ -19,20 +18,20 @@ exports.register_user = (req, res) => {
     .then(data => {
       if (data.length == 1) {
         res.status(409).json({
-          message: "Username already exist"
+          message: "Phone number already use."
         });
       } else {
-        let newUser = new userModel({
+        const newUser = new userModel({
           _id: new mongoose.Types.ObjectId(),
           user_name: username,
           user_password: password,
           user_phone: phone,
-          user_level: level
+          user_level: 1
         });
 
         newUser.save().then(response => {
           res.status(201).json({
-            message: "Success",
+            message: "Successfully registered the user",
             data: response
           });
         });
@@ -46,16 +45,16 @@ exports.register_user = (req, res) => {
 };
 
 exports.login_user = (req, res) => {
-  let username = req.query.username,
-    password = req.query.pass;
-  phone = req.query.phone;
+  const phone = req.query.phone;
+  const password = req.query.pass;
 
-  let query = {
-    user_name: username,
+  const query = {
+    user_phone: phone,
     user_password: password
   };
+
   userModel
-    .find(query)
+    .find(query, { _id: 0, user_password: 0, __v: 0 })
     .exec()
     .then(data => {
       if (data.length == 1) {
@@ -72,7 +71,9 @@ exports.login_user = (req, res) => {
               user_data: data,
               authority: datas
             };
-            res.status(200).send(result);
+            res.status(200).send({
+              data: result
+            });
           })
           .catch(err => {
             res.send({
@@ -80,9 +81,8 @@ exports.login_user = (req, res) => {
             });
           });
       } else {
-        res.status(401).json({
-          status: "ERR",
-          message: "Invalid username or password"
+        res.status(400).json({
+          message: "Invalid phone number or password"
         });
       }
     })
@@ -98,9 +98,13 @@ exports.all_user = (req, res) => {
     .find({}, { _id: 0, __v: 0, user_password: 0 })
     .exec()
     .then(data => {
-      res.send(data);
+      res.send({
+        data: data
+      });
     })
     .catch(err => {
-      res.send(err);
+      res.send({
+        message: err
+      });
     });
 };
