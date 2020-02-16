@@ -31,7 +31,7 @@ exports.register_user = (req, res) => {
 
         newUser.save().then(response => {
           res.status(201).json({
-            message: "Success",
+            message: "Successfully registered the user",
             data: response
           });
         });
@@ -79,8 +79,7 @@ exports.login_user = (req, res) => {
             });
           });
       } else {
-        res.status(401).json({
-          status: "ERR",
+        res.status(400).json({
           message: "Invalid phone number or password"
         });
       }
