@@ -30,10 +30,7 @@ exports.register_user = (req, res) => {
         });
 
         newUser.save().then(response => {
-          res.status(201).json({
-            message: "Sukses mendaftarkan akun.",
-            data: response
-          });
+          res.status(201).json({});
         });
       }
     })
