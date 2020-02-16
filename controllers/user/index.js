@@ -18,7 +18,7 @@ exports.register_user = (req, res) => {
     .then(data => {
       if (data.length == 1) {
         res.status(409).json({
-          message: "Phone number already use."
+          message: "Nomor telfon sudah digunakan."
         });
       } else {
         const newUser = new userModel({
@@ -31,7 +31,7 @@ exports.register_user = (req, res) => {
 
         newUser.save().then(response => {
           res.status(201).json({
-            message: "Successfully registered the user",
+            message: "Sukses mendaftarkan akun.",
             data: response
           });
         });
@@ -82,7 +82,7 @@ exports.login_user = (req, res) => {
           });
       } else {
         res.status(400).json({
-          message: "Invalid phone number or password"
+          message: "Nomor telfon atau password tidak valid."
         });
       }
     })
