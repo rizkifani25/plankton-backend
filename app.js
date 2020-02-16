@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 // main
 const indexRouter = require("./routes/index");
@@ -19,6 +20,12 @@ const alprosDescRouter = require("./routes/alpro-desc");
 const odpRouter = require("./routes/odp/");
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "*"
+  })
+);
 
 const endpoint = require("./services/endpoint");
 
