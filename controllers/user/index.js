@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const userModel = require("../../models/user");
-const roleModel = require("../../models/role");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -64,8 +63,8 @@ exports.login_user = async (req, res) => {
     user_phone: phone
   };
 
-  userModel
-    .findOne(query, { _id: 0, __v: 0 })
+  await userModel
+    .findOne(query, { __v: 0 })
     .exec()
     .then(async data => {
       const isValidPass = await bcrypt.compare(password, data.user_password);
@@ -74,28 +73,14 @@ exports.login_user = async (req, res) => {
           message: "Password salah."
         });
       } else {
-        let userLevel = data.user_level;
-        let query = {
-          user_level: userLevel
-        };
-        let result;
-        roleModel
-          .find(query, { _id: 0, user_level: 0 })
-          .exec()
-          .then(datas => {
-            result = {
-              user_data: data,
-              authority: datas
-            };
-            res.status(200).send({
-              data: result
-            });
-          })
-          .catch(err => {
-            res.send({
-              message: "Kueri salah."
-            });
-          });
+        const token = jwt.sign(
+          { _id: data._id, phone: data.user_phone },
+          process.env.TOKEN_SECRET_KEY
+        );
+
+        res.status(200).send({
+          auth_token: token
+        });
       }
     })
     .catch(err => {
@@ -105,8 +90,8 @@ exports.login_user = async (req, res) => {
     });
 };
 
-exports.all_user = (req, res) => {
-  userModel
+exports.all_user = async (req, res) => {
+  await userModel
     .find({}, { _id: 0, __v: 0, user_password: 0 })
     .exec()
     .then(data => {
