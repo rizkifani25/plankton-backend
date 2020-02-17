@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const userModel = require("../../models/user");
 const roleModel = require("../../models/role");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // REGISTER
 exports.register_user = async (req, res) => {
@@ -70,7 +71,7 @@ exports.login_user = async (req, res) => {
       const isValidPass = await bcrypt.compare(password, data.user_password);
       if (!isValidPass) {
         res.status(400).json({
-          message: "Nomor telfon atau password tidak valid."
+          message: "Password salah."
         });
       } else {
         let userLevel = data.user_level;
@@ -92,55 +93,16 @@ exports.login_user = async (req, res) => {
           })
           .catch(err => {
             res.send({
-              message: err
+              message: "Kueri salah."
             });
           });
       }
     })
     .catch(err => {
-      res.send({
-        message: err
+      res.status(400).send({
+        message: "Nomor telfon tidak valid."
       });
     });
-
-  // userModel
-  //   .find(query, { _id: 0, user_password: 0, __v: 0 })
-  //   .exec()
-  //   .then(data => {
-  //     if (data.length == 1) {
-  //       let userLevel = data[0]["user_level"];
-  //       let query = {
-  //         user_level: userLevel
-  //       };
-  //       let result;
-  //       roleModel
-  //         .find(query, { _id: 0, user_level: 0 })
-  //         .exec()
-  //         .then(datas => {
-  //           result = {
-  //             user_data: data,
-  //             authority: datas
-  //           };
-  //           res.status(200).send({
-  //             data: result
-  //           });
-  //         })
-  //         .catch(err => {
-  //           res.send({
-  //             message: err
-  //           });
-  //         });
-  //     } else {
-  //       res.status(400).json({
-  //         message: "Nomor telfon atau password tidak valid."
-  //       });
-  //     }
-  //   })
-  //   .catch(err => {
-  //     res.send({
-  //       message: err
-  //     });
-  //   });
 };
 
 exports.all_user = (req, res) => {
