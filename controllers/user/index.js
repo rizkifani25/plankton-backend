@@ -3,6 +3,7 @@ const userModel = require("../../models/user");
 const roleModel = require("../../models/role");
 const bcrypt = require("bcryptjs");
 
+// REGISTER
 exports.register_user = async (req, res) => {
   const username = req.query.username;
   const password = req.query.password;
@@ -53,21 +54,26 @@ exports.register_user = async (req, res) => {
     });
 };
 
-exports.login_user = (req, res) => {
+// LOGIN
+exports.login_user = async (req, res) => {
   const phone = req.query.phone;
   const password = req.query.password;
 
   const query = {
-    user_phone: phone,
-    user_password: password
+    user_phone: phone
   };
 
   userModel
-    .find(query, { _id: 0, user_password: 0, __v: 0 })
+    .findOne(query, { _id: 0, __v: 0 })
     .exec()
-    .then(data => {
-      if (data.length == 1) {
-        let userLevel = data[0]["user_level"];
+    .then(async data => {
+      const isValidPass = await bcrypt.compare(password, data.user_password);
+      if (!isValidPass) {
+        res.status(400).json({
+          message: "Nomor telfon atau password tidak valid."
+        });
+      } else {
+        let userLevel = data.user_level;
         let query = {
           user_level: userLevel
         };
@@ -89,10 +95,6 @@ exports.login_user = (req, res) => {
               message: err
             });
           });
-      } else {
-        res.status(400).json({
-          message: "Nomor telfon atau password tidak valid."
-        });
       }
     })
     .catch(err => {
@@ -100,6 +102,45 @@ exports.login_user = (req, res) => {
         message: err
       });
     });
+
+  // userModel
+  //   .find(query, { _id: 0, user_password: 0, __v: 0 })
+  //   .exec()
+  //   .then(data => {
+  //     if (data.length == 1) {
+  //       let userLevel = data[0]["user_level"];
+  //       let query = {
+  //         user_level: userLevel
+  //       };
+  //       let result;
+  //       roleModel
+  //         .find(query, { _id: 0, user_level: 0 })
+  //         .exec()
+  //         .then(datas => {
+  //           result = {
+  //             user_data: data,
+  //             authority: datas
+  //           };
+  //           res.status(200).send({
+  //             data: result
+  //           });
+  //         })
+  //         .catch(err => {
+  //           res.send({
+  //             message: err
+  //           });
+  //         });
+  //     } else {
+  //       res.status(400).json({
+  //         message: "Nomor telfon atau password tidak valid."
+  //       });
+  //     }
+  //   })
+  //   .catch(err => {
+  //     res.send({
+  //       message: err
+  //     });
+  //   });
 };
 
 exports.all_user = (req, res) => {
