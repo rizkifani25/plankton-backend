@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const userModel = require("../../models/user");
 const roleModel = require("../../models/role");
+const bcrypt = require("bcryptjs");
 
-exports.register_user = (req, res) => {
+exports.register_user = async (req, res) => {
   const username = req.query.username;
   const password = req.query.pass;
   const phone = req.query.phone;
@@ -12,26 +13,37 @@ exports.register_user = (req, res) => {
     user_level: 1
   };
 
-  userModel
-    .find(query)
+  await userModel
+    .findOne(query)
     .exec()
-    .then(data => {
-      if (data.length == 1) {
+    .then(async data => {
+      if (data) {
         res.status(409).json({
           message: "Nomor telfon sudah digunakan."
         });
       } else {
+        // Hashing password
+        const saltedKey = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, saltedKey);
+
         const newUser = new userModel({
           _id: new mongoose.Types.ObjectId(),
           user_name: username,
-          user_password: password,
+          user_password: hashedPassword,
           user_phone: phone,
           user_level: 1
         });
 
-        newUser.save().then(response => {
-          res.status(201).json({});
-        });
+        newUser
+          .save()
+          .then(response => {
+            res.status(201).json({});
+          })
+          .catch(err => {
+            res.send({
+              message: "Kesalahan server. Gagal membuat user baru."
+            });
+          });
       }
     })
     .catch(err => {
@@ -43,7 +55,7 @@ exports.register_user = (req, res) => {
 
 exports.login_user = (req, res) => {
   const phone = req.query.phone;
-  const password = req.query.pass;
+  const password = req.query.password;
 
   const query = {
     user_phone: phone,
