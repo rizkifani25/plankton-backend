@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 exports.register_user = async (req, res) => {
   const username = req.query.username;
-  const password = req.query.pass;
+  const password = req.query.password;
   const phone = req.query.phone;
 
   const query = {
