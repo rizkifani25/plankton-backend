@@ -4,6 +4,7 @@ exports.TEST = "/test";
 exports.USERS = "/users";
 exports.REGISTER_V1 = "/register";
 exports.LOGIN = "/login";
+exports.GET_USER_LOGIN = "/getUserLogin";
 
 // alpro
 exports.ALPROS_ICON = "/alpros";

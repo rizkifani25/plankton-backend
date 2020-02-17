@@ -11,6 +11,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/user/users");
 const registerRouter = require("./routes/user/register");
 const loginRouter = require("./routes/user/login");
+const authLoginRouter = require("./routes/user/auth");
 
 // alpro
 const alprosRouter = require("./routes/alpro");
@@ -62,6 +63,7 @@ app.use(endpoint.HOME, indexRouter);
 app.use(endpoint.USERS, usersRouter);
 app.use(endpoint.REGISTER_V1, registerRouter);
 app.use(endpoint.LOGIN, loginRouter);
+app.use(endpoint.GET_USER_LOGIN, authLoginRouter);
 
 // allpro
 app.use(endpoint.ALPROS_ICON, alprosRouter);
