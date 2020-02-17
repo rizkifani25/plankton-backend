@@ -63,11 +63,14 @@ exports.login_user = async (req, res) => {
     user_phone: phone
   };
 
+  console.log(req.query);
+
   userModel
     .findOne(query, { _id: 0, __v: 0 })
     .exec()
     .then(async data => {
       const isValidPass = await bcrypt.compare(password, data.user_password);
+      console.log(isValiedPass);
       if (!isValidPass) {
         res.status(400).json({
           message: "Nomor telfon atau password tidak valid."
@@ -98,8 +101,8 @@ exports.login_user = async (req, res) => {
       }
     })
     .catch(err => {
-      res.send({
-        message: err
+      res.status(400).send({
+        message: "Nomor telfon atau password tidak valid."
       });
     });
 
