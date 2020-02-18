@@ -16,3 +16,8 @@ exports.ALPROS_DESC = "/alpros/desc";
 
 // odp
 exports.LIST_ODP = "/odp";
+
+// user upload
+exports.CREATE_REPORT = "/create-report";
+exports.GET_REPORTS = "/reports";
+exports.GET_REPORT = "/report";
