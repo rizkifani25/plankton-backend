@@ -2,6 +2,7 @@ const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -60,8 +61,9 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -73,8 +75,8 @@ app.use(endpoint.LOGIN, loginRouter);
 app.use(endpoint.GET_USER_LOGIN, authLoginRouter);
 
 // report
-app.use(endpoint.REPORT, reportsRouter);
-app.use(endpoint.UPLOAD_REPORT, uploadReportRouter);
+// app.use(endpoint.REPORT, reportsRouter);
+// app.use(endpoint.UPLOAD_REPORT, uploadReportRouter);
 
 // allpro
 app.use(endpoint.ALPROS_ICON, alprosRouter);
