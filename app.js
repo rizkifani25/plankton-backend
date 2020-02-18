@@ -13,6 +13,10 @@ const registerRouter = require("./routes/user/register");
 const loginRouter = require("./routes/user/login");
 const authLoginRouter = require("./routes/user/auth");
 
+// report
+const reportsRouter = require("./routes/report/list-report");
+const uploadReportRouter = require("./routes/report/upload");
+
 // alpro
 const alprosRouter = require("./routes/alpro");
 const alprosDescRouter = require("./routes/alpro-desc");
@@ -65,9 +69,13 @@ app.use(endpoint.REGISTER_V1, registerRouter);
 app.use(endpoint.LOGIN, loginRouter);
 app.use(endpoint.GET_USER_LOGIN, authLoginRouter);
 
+// report
+app.use(endpoint.REPORT, reportsRouter);
+app.use(endpoint.UPLOAD_REPORT, uploadReportRouter);
+
 // allpro
 app.use(endpoint.ALPROS_ICON, alprosRouter);
-app.use(endpoint.ALPRO_DESC, alprosDescRouter);
+app.use(endpoint.ALPROS_DESC, alprosDescRouter);
 
 // odp
 app.use(endpoint.LIST_ODP, odpRouter);

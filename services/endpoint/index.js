@@ -6,9 +6,13 @@ exports.REGISTER_V1 = "/register";
 exports.LOGIN = "/login";
 exports.GET_USER_LOGIN = "/getUserLogin";
 
+// report
+exports.REPORT = "/reports";
+exports.UPLOAD_REPORT = "/create-report";
+
 // alpro
 exports.ALPROS_ICON = "/alpros";
-exports.ALPRO_DESC = "/alpros/desc";
+exports.ALPROS_DESC = "/alpros/desc";
 
 // odp
 exports.LIST_ODP = "/odp";

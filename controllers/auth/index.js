@@ -17,7 +17,7 @@ exports.getUserLogin = async (req, res) => {
       };
 
       await userModel
-        .findOne(query, { _id: 0, __v: 0 })
+        .findOne(query, { _id: 0, user_password: 0, __v: 0 })
         .exec()
         .then(async data => {
           const userLevel = data.user_level;
