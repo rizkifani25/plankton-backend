@@ -21,7 +21,7 @@ const alprosDescRouter = require("./routes/alpro-desc");
 const odpRouter = require("./routes/odp");
 
 // report
-// const reportRouter = require("./routes/report/createReport");
+const reportRouter = require("./routes/report/createReport");
 
 const app = express();
 
@@ -76,7 +76,7 @@ app.use(endpoint.ALPRO_DESC, alprosDescRouter);
 app.use(endpoint.LIST_ODP, odpRouter);
 
 //Report
-// app.use(endpoint.CREATE_REPORT, reportRouter);
+app.use(endpoint.CREATE_REPORT, reportRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
