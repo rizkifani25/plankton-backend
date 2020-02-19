@@ -5,7 +5,7 @@ const reportSchema = mongoose.Schema({
   user: Object,
   image_path: String,
   detail: String,
-  desciprtion: String,
+  description: String,
   alproType: Object,
   location: Object
 });
