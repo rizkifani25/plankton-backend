@@ -60,3 +60,33 @@ exports.closestODP = (req, res) => {
       });
     });
 };
+
+exports.getODPByWitel = async (req, res) => {
+  odpModel
+    .find()
+    .distinct("WITEL")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    });
+};
+
+exports.getODPByDatel = async (req, res) => {
+  let query;
+  req.query.witel == null
+    ? (query = {})
+    : (query = {
+        WITEL: req.query.witel
+      });
+  odpModel
+    .find(query)
+    .distinct("DATEL")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    });
+};

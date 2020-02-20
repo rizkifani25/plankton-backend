@@ -7,8 +7,13 @@ exports.LOGIN = "/login";
 exports.GET_USER_LOGIN = "/getUserLogin";
 
 // report
-exports.REPORT = "/reports";
-exports.UPLOAD_REPORT = "/create-report";
+exports.LIST_ALL_REPORT = "/reports";
+exports.GET_REPORT = "/get-report";
+exports.CREATE_NEW_REPORT = "/create-report";
+
+exports.WITEL = "/witel";
+exports.DATEL = "/datel";
+exports.GET_ALL_WITEL = "/get-witel";
 
 // alpro
 exports.ALPROS_ICON = "/alpros";
@@ -18,6 +23,6 @@ exports.ALPROS_DESC = "/alpros/desc";
 exports.LIST_ODP = "/odp";
 
 // user upload
-exports.CREATE_REPORT = "/create-report";
-exports.GET_REPORTS = "/reports";
-exports.GET_REPORT = "/report";
+// exports.CREATE_REPORT = "/create-report";
+// exports.GET_REPORTS = "/reports";
+// exports.GET_REPORT = "/report";
