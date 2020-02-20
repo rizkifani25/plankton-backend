@@ -81,7 +81,7 @@ exports.getODPByDatel = async (req, res) => {
         WITEL: req.query.witel
       });
   odpModel
-    .find(query)
+    .find(query, { _id: 0 })
     .distinct("DATEL")
     .exec()
     .then(response => {

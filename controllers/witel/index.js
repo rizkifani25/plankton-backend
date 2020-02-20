@@ -8,7 +8,7 @@ exports.getWitel = async (req, res) => {
         WITEL: req.query.witel
       });
   witelModel
-    .find(query)
+    .find(query, { _id: 0 })
     .exec()
     .then(response => {
       res.status(200).send({
