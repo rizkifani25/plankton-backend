@@ -9,7 +9,8 @@ const reportSchema = mongoose.Schema({
   alproType: {
     alpro_name_code: String,
     alpro_name: String,
-    alpro_code: String
+    alpro_code: String,
+    icon_path: String
   },
   location: {
     latitude: String,

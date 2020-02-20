@@ -23,7 +23,8 @@ exports.uploadReport = async (req, res) => {
     alproType: {
       alpro_name_code: alproType.alpro_name_code,
       alpro_name: alproType.alpro_name,
-      alpro_code: alproType.alpro_code
+      alpro_code: alproType.alpro_code,
+      icon_path: alproType.icon_path
     },
     location: {
       latitude: latitude,
