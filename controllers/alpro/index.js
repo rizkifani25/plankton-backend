@@ -1,6 +1,5 @@
 const alprosModel = require("../../models/alpro");
 const alproDescModel = require("../../models/alpro-desc");
-// const base64 = require("../../services/base64");
 
 exports.alpros = (req, res) => {
   alprosModel
