@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const reportSchema = require("../../models/reports");
+const reportSchema = require("../../models/report");
 
 exports.uploadReport = async (req, res) => {
   const {
@@ -36,7 +36,7 @@ exports.uploadReport = async (req, res) => {
 
   newReport
     .save()
-    .then(Response => {
+    .then(response => {
       res.status(201).send({
         message: "Report telah dibuat.",
         post_id: newReport._id
@@ -45,6 +45,45 @@ exports.uploadReport = async (req, res) => {
     .catch(err => {
       res.status(400).send({
         message: "Report gagal dibuat."
+      });
+    });
+};
+
+exports.getReport = async (req, res) => {
+  const reportId = req.query._id;
+
+  const query = {
+    _id: reportId
+  };
+
+  reportSchema
+    .find(query)
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: "Kesalahan server."
+      });
+    });
+};
+
+exports.getAllReports = async (req, res) => {
+  const query = {};
+  reportSchema
+    .find({})
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: "Kesalahan server."
       });
     });
 };

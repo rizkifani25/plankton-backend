@@ -14,10 +14,6 @@ const registerRouter = require("./routes/user/register");
 const loginRouter = require("./routes/user/login");
 const authLoginRouter = require("./routes/user/auth");
 
-// report
-const reportsRouter = require("./routes/report/list-report");
-const uploadReportRouter = require("./routes/report/upload");
-
 // alpro
 const alprosRouter = require("./routes/alpro");
 const alprosDescRouter = require("./routes/alpro-desc");
@@ -26,7 +22,14 @@ const alprosDescRouter = require("./routes/alpro-desc");
 const odpRouter = require("./routes/odp");
 
 // report
-const reportRouter = require("./routes/report/createReport");
+const getAllReportRouter = require("./routes/report/all-report");
+const getReportRouter = require("./routes/report/get-report");
+const createReportRouter = require("./routes/report/create-report");
+
+//witel
+const getByWitelReportRouter = require("./routes/report/get-witel-report");
+const getByDatelReportRouter = require("./routes/report/get-datel-report");
+const getAllWitelRouter = require("./routes/witel");
 
 const app = express();
 
@@ -74,9 +77,14 @@ app.use(endpoint.REGISTER_V1, registerRouter);
 app.use(endpoint.LOGIN, loginRouter);
 app.use(endpoint.GET_USER_LOGIN, authLoginRouter);
 
-// report
-// app.use(endpoint.REPORT, reportsRouter);
-// app.use(endpoint.UPLOAD_REPORT, uploadReportRouter);
+//report
+app.use(endpoint.LIST_ALL_REPORT, getAllReportRouter);
+app.use(endpoint.GET_REPORT, getReportRouter);
+app.use(endpoint.CREATE_NEW_REPORT, createReportRouter);
+
+app.use(endpoint.WITEL, getByWitelReportRouter);
+app.use(endpoint.DATEL, getByDatelReportRouter);
+app.use(endpoint.GET_ALL_WITEL, getAllWitelRouter);
 
 // allpro
 app.use(endpoint.ALPROS_ICON, alprosRouter);
@@ -84,9 +92,6 @@ app.use(endpoint.ALPROS_DESC, alprosDescRouter);
 
 // odp
 app.use(endpoint.LIST_ODP, odpRouter);
-
-//Report
-app.use(endpoint.CREATE_REPORT, reportRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
