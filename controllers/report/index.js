@@ -1,31 +1,49 @@
-const reportSchema = require("../../models/reports");
 const mongoose = require("mongoose");
+const reportSchema = require("../../models/reports");
 
 exports.uploadReport = async (req, res) => {
-  const { image_url, user, alproType, detail, description, coords } = req.query;
-
-  // const image_url = handleUploadImage(rawImage); //return imageUrl from firebase
-  console.log(req.query.description);
-  const newReport = new reportSchema({
-    _id: `PL${new mongoose.Types.ObjectId()}`,
-    user: JSON.parse(user),
-    alproType: JSON.parse(alproType),
+  const {
+    image_url,
+    user,
+    alproType,
     detail,
     description,
-    image_path: image_url || "/",
-    location: JSON.parse(coords)
+    latitude,
+    longitude,
+    datel,
+    witel
+  } = req.query;
+
+  const newReport = new reportSchema({
+    _id: `PL${new mongoose.Types.ObjectId()}`,
+    user_phone: user.user_phone,
+    image_path: image_url,
+    detail: detail,
+    description: description,
+    alproType: {
+      alpro_name_code: alproType.alpro_name_code,
+      alpro_name: alproType.alpro_name,
+      alpro_code: alproType.alpro_code
+    },
+    location: {
+      latitude: latitude,
+      longitude: longitude,
+      witel: witel,
+      datel: datel
+    }
   });
 
-  console.log(newReport);
-
-  res.status(200).json({ message: "asdads" });
-
-  // newReport
-  //   .save()
-  //   .then(Response => {
-  //     res.status(201).send({ post_id: newReport._id });
-  //   })
-  //   .catch(err => {
-  //     res.status(400).send({});
-  //   });
+  newReport
+    .save()
+    .then(Response => {
+      res.status(201).send({
+        message: "Report telah dibuat.",
+        post_id: newReport._id
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: "Report gagal dibuat."
+      });
+    });
 };
