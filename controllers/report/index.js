@@ -3,6 +3,7 @@ const reportSchema = require("../../models/report");
 
 exports.uploadReport = async (req, res) => {
   const {
+    report_id,
     image_url,
     user,
     alproType,
@@ -15,7 +16,7 @@ exports.uploadReport = async (req, res) => {
   } = req.query;
 
   const newReport = new reportSchema({
-    _id: `PL${new mongoose.Types.ObjectId()}`,
+    _id: report_id,
     user_phone: user.user_phone,
     image_path: image_url,
     detail: detail,
@@ -50,10 +51,10 @@ exports.uploadReport = async (req, res) => {
 };
 
 exports.getReport = async (req, res) => {
-  const reportId = req.query._id;
+  const report_id = req.query._id;
 
   const query = {
-    _id: reportId
+    _id: report_id
   };
 
   reportSchema
