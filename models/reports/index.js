@@ -2,12 +2,21 @@ const mongoose = require("mongoose");
 
 const reportSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  user: Object,
+  user_phone: String,
   image_path: String,
   detail: String,
   description: String,
-  alproType: Object,
-  location: Object
+  alproType: {
+    alpro_name_code: String,
+    alpro_name: String,
+    alpro_code: String
+  },
+  location: {
+    latitude: String,
+    longitude: String,
+    datel: String,
+    witel: String
+  }
 });
 
 module.exports = mongoose.model("reportModel", reportSchema, "reports");
