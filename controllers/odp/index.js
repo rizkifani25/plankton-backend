@@ -46,7 +46,6 @@ exports.closestODP = (req, res) => {
         .then(closestMore => {
           const less = FindClosestNode(query, closestLess);
           const more = FindClosestNode(query, closestMore);
-          console.log(less, more);
 
           if (less.closestDistance < more.closestDistance) {
             res.status(200).send({ data: less.closestPoint });
