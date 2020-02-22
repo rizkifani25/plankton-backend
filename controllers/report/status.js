@@ -7,6 +7,10 @@ const statusList = [
   { code: 1000, label: "Others" }
 ];
 
+exports.getStatus = (req, res) => {
+  res.status(200).send({ data: statusList });
+};
+
 exports.findStatus = code => {
   let result = statusList.filter(item => item.code === code);
   if (result.length > 0) {

@@ -24,13 +24,14 @@ exports.uploadReport = async (req, res) => {
 
   const date = getCurrentDate();
 
-  const status = utilStatus.findStatus(100);
+  const status = utilStatus.findStatus(100).code;
 
   const { latitude, longitude } = queryRequest.coords;
 
   const newReport = new reportSchema({
     _id: report_id,
     user_phone: user.user_phone,
+    user_name: user.user_name,
     image_path: image_url,
     detail: detail,
     description,
@@ -92,9 +93,9 @@ exports.getReport = async (req, res) => {
     };
     reportSchema
       .find(query)
-      .exec()
       .skip(limit * (page - 1))
       .limit(limit)
+      .exec()
       .then(response => {
         res.status(200).send({
           data: response
