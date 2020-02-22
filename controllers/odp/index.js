@@ -6,11 +6,11 @@ const FindClosestNode = (origin, points) => {
 
   points.map(point => {
     const deltaX = Math.pow(
-      parseFloat(origin.LATITUDE) - parseFloat(point.LATITUDE),
+      parseFloat(origin.latitude) - parseFloat(point.LATITUDE),
       2
     );
     const deltaY = Math.pow(
-      parseFloat(origin.LONGITUDE) - parseFloat(point.LONGITUDE),
+      parseFloat(origin.longitude) - parseFloat(point.LONGITUDE),
       2
     );
     const jarak = Math.sqrt(deltaX + deltaY);
@@ -24,28 +24,28 @@ const FindClosestNode = (origin, points) => {
 };
 
 exports.closestODP = (req, res) => {
-  const query = { LATITUDE: "-6,9984", LONGITUDE: "107,1410" };
+  const { latitude, longitude } = req.query;
 
   odpModel
     .find({
-      LATITUDE: { $lt: query.LATITUDE },
-      LONGITUDE: { $lt: query.LONGITUDE }
+      LATITUDE: { $lt: latitude },
+      LONGITUDE: { $lt: longitude }
     })
     .sort({ LATITUDE: -1, LONGITUDE: -1 })
-    .limit(1000)
+    .limit(200)
     .exec()
     .then(closestLess => {
       odpModel
         .find({
-          LATITUDE: { $gt: query.LATITUDE },
-          LONGITUDE: { $gt: query.LONGITUDE }
+          LATITUDE: { $gt: latitude },
+          LONGITUDE: { $gt: longitude }
         })
         .sort({ LATITUDE: 1, LONGITUDE: 1 })
-        .limit(1000)
+        .limit(200)
         .exec()
         .then(closestMore => {
-          const less = FindClosestNode(query, closestLess);
-          const more = FindClosestNode(query, closestMore);
+          const less = FindClosestNode(req.query, closestLess);
+          const more = FindClosestNode(req.query, closestMore);
 
           if (less.closestDistance < more.closestDistance) {
             res.status(200).send({ data: less.closestPoint });

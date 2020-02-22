@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const reportSchema = mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
+  _id: String,
   user_phone: String,
   image_path: String,
   detail: String,
@@ -17,7 +17,9 @@ const reportSchema = mongoose.Schema({
     longitude: String,
     datel: String,
     witel: String
-  }
+  },
+  status: Object,
+  date: String
 });
 
 module.exports = mongoose.model("reportModel", reportSchema, "reports");
