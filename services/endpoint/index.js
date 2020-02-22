@@ -12,6 +12,7 @@ exports.GET_REPORT = "/get-report";
 exports.CREATE_NEW_REPORT = "/create-report";
 exports.GET_USER_REPORT = "/reports/user";
 exports.FILTER_REPORT = "/reports/filter";
+exports.UPDATE_REPORT = "/reports/update";
 
 exports.WITEL = "/witel";
 exports.DATEL = "/datel";

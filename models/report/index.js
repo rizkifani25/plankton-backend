@@ -17,10 +17,7 @@ const reportSchema = mongoose.Schema({
     datel: String,
     witel: String
   },
-  status: {
-    code: String,
-    label: String
-  },
+  status: Number,
   date: String
 });
 
