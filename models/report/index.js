@@ -7,7 +7,6 @@ const reportSchema = mongoose.Schema({
   detail: String,
   description: String,
   alproType: {
-    alpro_name_code: String,
     alpro_name: String,
     alpro_code: String,
     icon_path: String
@@ -18,7 +17,10 @@ const reportSchema = mongoose.Schema({
     datel: String,
     witel: String
   },
-  status: Object,
+  status: {
+    code: String,
+    label: String
+  },
   date: String
 });
 
