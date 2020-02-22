@@ -92,7 +92,7 @@ exports.getReport = async (req, res) => {
       user_phone
     };
     reportSchema
-      .find(query)
+      .find(query, { user_phone: 0, user_name: 0, image_path: 0, location: 0 })
       .skip(limit * (page - 1))
       .limit(limit)
       .exec()
