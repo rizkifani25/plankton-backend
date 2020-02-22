@@ -67,24 +67,45 @@ exports.uploadReport = async (req, res) => {
 
 exports.getReport = async (req, res) => {
   const report_id = req.query._id;
+  const { user_phone, limit = 10, page = 1 } = req.query;
 
-  const query = {
-    _id: report_id
-  };
-
-  reportSchema
-    .find(query)
-    .exec()
-    .then(response => {
-      res.status(200).send({
-        data: response
+  if (report_id) {
+    const query = {
+      _id: report_id
+    };
+    reportSchema
+      .findOne(query)
+      .exec()
+      .then(response => {
+        res.status(200).send({
+          data: response
+        });
+      })
+      .catch(err => {
+        res.status(400).send({
+          message: "Kesalahan server."
+        });
       });
-    })
-    .catch(err => {
-      res.status(400).send({
-        message: "Kesalahan server."
+  } else if (user_phone) {
+    const query = {
+      user_phone
+    };
+    reportSchema
+      .find(query)
+      .exec()
+      .skip(limit * (page - 1))
+      .limit(limit)
+      .then(response => {
+        res.status(200).send({
+          data: response
+        });
+      })
+      .catch(err => {
+        res.status(400).send({
+          message: "Kesalahan server."
+        });
       });
-    });
+  }
 };
 
 exports.getAllReports = async (req, res) => {
