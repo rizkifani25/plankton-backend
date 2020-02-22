@@ -1,7 +1,16 @@
 const mongoose = require("mongoose");
 const reportSchema = require("../../models/report");
+const objects = require("../../services/sanitizedata");
+const utilStatus = require("./status");
+
+const getCurrentDate = () => {
+  let today = new Date();
+  return `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate() +
+    " "}${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+};
 
 exports.uploadReport = async (req, res) => {
+  const queryRequest = objects.sanitizeData(req.query);
   const {
     report_id,
     image_url,
@@ -9,18 +18,22 @@ exports.uploadReport = async (req, res) => {
     alproType,
     detail,
     description,
-    latitude,
-    longitude,
     datel,
     witel
-  } = req.query;
+  } = queryRequest;
+
+  const date = getCurrentDate();
+
+  const status = utilStatus.findStatus(100);
+
+  const { latitude, longitude } = queryRequest.coords;
 
   const newReport = new reportSchema({
     _id: report_id,
     user_phone: user.user_phone,
     image_path: image_url,
     detail: detail,
-    description: description,
+    description,
     alproType: {
       alpro_name_code: alproType.alpro_name_code,
       alpro_name: alproType.alpro_name,
@@ -28,11 +41,13 @@ exports.uploadReport = async (req, res) => {
       icon_path: alproType.icon_path
     },
     location: {
-      latitude: latitude,
-      longitude: longitude,
-      witel: witel,
-      datel: datel
-    }
+      latitude,
+      longitude,
+      datel,
+      witel
+    },
+    status,
+    date
   });
 
   newReport
@@ -44,6 +59,7 @@ exports.uploadReport = async (req, res) => {
       });
     })
     .catch(err => {
+      console.log(err);
       res.status(400).send({
         message: "Report gagal dibuat."
       });
