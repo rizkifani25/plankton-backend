@@ -33,7 +33,7 @@ exports.uploadReport = async (req, res) => {
     user_phone: user.user_phone,
     image_path: image_url,
     detail: detail,
-    description,
+    description: description,
     alproType: {
       alpro_name: alproType.alpro_name,
       alpro_code: alproType.alpro_code,
