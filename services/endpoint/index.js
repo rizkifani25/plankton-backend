@@ -10,6 +10,8 @@ exports.GET_USER_LOGIN = "/getUserLogin";
 exports.LIST_ALL_REPORT = "/reports";
 exports.GET_REPORT = "/get-report";
 exports.CREATE_NEW_REPORT = "/create-report";
+exports.GET_USER_REPORT = "/reports/user";
+exports.FILTER_REPORT = "/reports/filter";
 
 exports.WITEL = "/witel";
 exports.DATEL = "/datel";
