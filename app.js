@@ -26,6 +26,7 @@ const getAllReportRouter = require("./routes/report/all-report");
 const getReportRouter = require("./routes/report/get-report");
 const getUserReportRouter = require("./routes/report/get-user-report");
 const createReportRouter = require("./routes/report/create-report");
+const updateReportRouter = require("./routes/report/update-report");
 const filterReportRouter = require("./routes/report/filter-report");
 const getStatusListRouter = require("./routes/report/get-status-list");
 
@@ -86,7 +87,11 @@ app.use(endpoint.GET_REPORT, getReportRouter);
 app.use(endpoint.CREATE_NEW_REPORT, createReportRouter);
 app.use(endpoint.GET_USER_REPORT, getUserReportRouter);
 app.use(endpoint.FILTER_REPORT, filterReportRouter);
+<<<<<<< HEAD
 app.use(endpoint.GET_STATUSLIST, getStatusListRouter);
+=======
+app.use(endpoint.UPDATE_REPORT, updateReportRouter);
+>>>>>>> f61150229c91291b36118e5f8f42ff7727b6d23e
 
 app.use(endpoint.WITEL, getByWitelReportRouter);
 app.use(endpoint.DATEL, getByDatelReportRouter);
