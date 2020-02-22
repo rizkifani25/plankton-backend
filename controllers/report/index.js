@@ -3,12 +3,36 @@ const reportSchema = require("../../models/report");
 const objects = require("../../services/sanitizedata");
 const utilStatus = require("./status");
 
+mongoose.set("useFindAndModify", false);
+
 const getCurrentDate = () => {
   let today = new Date();
   return `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate() +
     " "}${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
 };
 
+exports.updateReport = async (req, res) => {
+  const { status, _id } = req.query;
+  const updatedStatus = utilStatus.findStatus(parseInt(status));
+  const query = {
+    _id: _id
+  };
+  const update = {
+    status: updatedStatus.code
+  };
+  reportSchema
+    .findOneAndUpdate(query, update)
+    .then(response => {
+      res.status(200).send({
+        message: "Berhasil memperbarui status laporan."
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: "Gagal memperbarui status laporan."
+      });
+    });
+};
 exports.uploadReport = async (req, res) => {
   const queryRequest = objects.sanitizeData(req.query);
   const {
@@ -59,7 +83,6 @@ exports.uploadReport = async (req, res) => {
       });
     })
     .catch(err => {
-      console.log(err);
       res.status(400).send({
         message: "Report gagal dibuat."
       });
@@ -150,6 +173,7 @@ exports.getReportByUser = async (req, res) => {
 
 exports.filterReport = async (req, res) => {
   const { witel, datel, alpro_name, description, status } = req.query;
+  const filteredStatus = utilStatus.findStatus(status);
   let query;
   if (
     witel != null &&
@@ -190,7 +214,7 @@ exports.filterReport = async (req, res) => {
     description == null &&
     status != null
   ) {
-    query = { "status.label": status };
+    query = { status: filteredStatus.code };
   } else if (
     witel != null &&
     datel != null &&
