@@ -18,7 +18,7 @@ exports.updateReport = async (req, res) => {
     _id: _id
   };
   const update = {
-    status: updatedStatus.code
+    status: updatedStatus
   };
   reportSchema
     .findOneAndUpdate(query, update)
@@ -48,7 +48,7 @@ exports.uploadReport = async (req, res) => {
 
   const date = getCurrentDate();
 
-  const status = utilStatus.findStatus(100).code;
+  const status = utilStatus.findStatus(100);
 
   const { latitude, longitude } = queryRequest.coords;
 
@@ -134,7 +134,7 @@ exports.getReport = async (req, res) => {
 
 exports.getAllReports = async (req, res) => {
   const query = {};
-  reportSchema
+  reportSchemapostpost
     .find(query, { __v: 0 })
     .exec()
     .then(response => {
@@ -172,69 +172,29 @@ exports.getReportByUser = async (req, res) => {
 };
 
 exports.filterReport = async (req, res) => {
-  const { witel, datel, alpro_name, description, status } = req.query;
-  const filteredStatus = utilStatus.findStatus(status);
-  let query;
-  if (
-    witel != null &&
-    datel == null &&
-    alpro_name == null &&
-    description == null &&
-    status == null
-  ) {
-    query = { "location.witel": witel };
-  } else if (
-    witel == null &&
-    datel != null &&
-    alpro_name == null &&
-    description == null &&
-    status == null
-  ) {
-    query = { "location.datel": datel };
-  } else if (
-    witel == null &&
-    datel == null &&
-    alpro_name != null &&
-    description == null &&
-    status == null
-  ) {
-    query = { "alproType.alpro_name": alpro_name };
-  } else if (
-    witel == null &&
-    datel == null &&
-    alpro_name == null &&
-    description != null &&
-    status == null
-  ) {
-    query = { description: description };
-  } else if (
-    witel == null &&
-    datel == null &&
-    alpro_name == null &&
-    description == null &&
-    status != null
-  ) {
-    query = { status: filteredStatus.code };
-  } else if (
-    witel != null &&
-    datel != null &&
-    alpro_name != null &&
-    description != null &&
-    status != null
-  ) {
-    query = {
-      "location.witel": witel,
-      "location.datel": datel,
-      "alproType.alpro_name": alpro_name,
-      description: description,
-      "status.label": status
-    };
-  } else {
-    query = {};
-  }
+  let queryRequest = objects.sanitizeData(req.query);
+  const {
+    witel,
+    datel,
+    type,
+    description,
+    status,
+    limit = 10,
+    page = 1
+  } = queryRequest;
+
+  let query = {};
+
+  if (witel) query["location.witel"] = witel;
+  if (datel) query["location.datel"] = datel;
+  if (type) query["alproType.alpro_name"] = type;
+  if (description) query.description = description;
+  if (status) query["status.code"] = status;
 
   reportSchema
     .find(query, { __v: 0 })
+    .skip(limit * (page - 1))
+    .limit(limit)
     .exec()
     .then(response => {
       res.status(200).send({
