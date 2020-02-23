@@ -87,11 +87,8 @@ app.use(endpoint.GET_REPORT, getReportRouter);
 app.use(endpoint.CREATE_NEW_REPORT, createReportRouter);
 app.use(endpoint.GET_USER_REPORT, getUserReportRouter);
 app.use(endpoint.FILTER_REPORT, filterReportRouter);
-<<<<<<< HEAD
 app.use(endpoint.GET_STATUSLIST, getStatusListRouter);
-=======
 app.use(endpoint.UPDATE_REPORT, updateReportRouter);
->>>>>>> f61150229c91291b36118e5f8f42ff7727b6d23e
 
 app.use(endpoint.WITEL, getByWitelReportRouter);
 app.use(endpoint.DATEL, getByDatelReportRouter);
