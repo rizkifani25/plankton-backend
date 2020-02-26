@@ -87,8 +87,6 @@ exports.closestODP = (req, res) => {
                           req.query,
                           closestMoreLess
                         );
-                        console.log(req.query);
-                        console.log(closestLess);
                         const nums = [
                           less.closestDistance,
                           more.closestDistance,
