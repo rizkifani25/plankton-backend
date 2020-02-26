@@ -27,7 +27,7 @@ const FindClosestNode = (origin, points) => {
     }
   });
 
-  console.log(closestPoint, closestDistance);
+  // console.log(closestPoint, closestDistance);
 
   return { closestPoint, closestDistance };
 };
