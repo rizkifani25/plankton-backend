@@ -44,20 +44,20 @@ exports.closestODP = (req, res) => {
       } else {
         odpModel
           .find({
-            LATITUDE: { $lt: latitude },
-            LONGITUDE: { $lt: longitude }
+            LATITUDE: { $lte: latitude },
+            LONGITUDE: { $lte: longitude }
           })
           .sort({ LATITUDE: -1, LONGITUDE: -1 })
-          .limit(1000)
+          .limit(200)
           .exec()
           .then(closestLess => {
             odpModel
               .find({
-                LATITUDE: { $gt: latitude },
-                LONGITUDE: { $gt: longitude }
+                LATITUDE: { $gte: latitude },
+                LONGITUDE: { $gte: longitude }
               })
               .sort({ LATITUDE: 1, LONGITUDE: 1 })
-              .limit(1000)
+              .limit(200)
               .exec()
               .then(closestMore => {
                 const less = FindClosestNode(req.query, closestLess);
