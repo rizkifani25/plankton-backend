@@ -27,6 +27,8 @@ const FindClosestNode = (origin, points) => {
     }
   });
 
+  console.log(closestPoint, closestDistance);
+
   return { closestPoint, closestDistance };
 };
 
@@ -47,7 +49,7 @@ exports.closestODP = (req, res) => {
             LONGITUDE: { $lte: longitude, $exists: true, $ne: "" }
           })
           .sort({ LATITUDE: 1, LONGITUDE: 1 })
-          .limit(200)
+          .limit(10)
           .exec()
           .then(closestLess => {
             odpModel
@@ -56,7 +58,7 @@ exports.closestODP = (req, res) => {
                 LONGITUDE: { $gte: longitude, $exists: true, $ne: "" }
               })
               .sort({ LATITUDE: 1, LONGITUDE: 1 })
-              .limit(200)
+              .limit(10)
               .exec()
               .then(closestMore => {
                 odpModel
@@ -65,7 +67,7 @@ exports.closestODP = (req, res) => {
                     LONGITUDE: { $gte: longitude, $exists: true, $ne: "" }
                   })
                   .sort({ LATITUDE: -1, LONGITUDE: 1 })
-                  .limit(200)
+                  .limit(10)
                   .exec()
                   .then(closestLessMore => {
                     odpModel
@@ -74,7 +76,7 @@ exports.closestODP = (req, res) => {
                         LONGITUDE: { $lte: longitude, $exists: true, $ne: "" }
                       })
                       .sort({ LATITUDE: 1, LONGITUDE: -1 })
-                      .limit(200)
+                      .limit(10)
                       .exec()
                       .then(closestMoreLess => {
                         const less = FindClosestNode(req.query, closestLess);
