@@ -22,7 +22,6 @@ const FindClosestNode = (origin, points) => {
     const jarak = Math.sqrt(deltaX + deltaY);
 
     if (jarak <= closestDistance) {
-      console.log(jarak, closestDistance);
       closestDistance = jarak;
       closestPoint = point;
     }
@@ -48,7 +47,7 @@ exports.closestODP = (req, res) => {
             LONGITUDE: { $lte: longitude }
           })
           .sort({ LATITUDE: -1, LONGITUDE: -1 })
-          .limit(200)
+          .limit(50)
           .exec()
           .then(closestLess => {
             odpModel
@@ -57,30 +56,62 @@ exports.closestODP = (req, res) => {
                 LONGITUDE: { $gte: longitude }
               })
               .sort({ LATITUDE: 1, LONGITUDE: 1 })
-              .limit(200)
+              .limit(50)
               .exec()
               .then(closestMore => {
-                const less = FindClosestNode(req.query, closestLess);
-                const more = FindClosestNode(req.query, closestMore);
+                odpModel
+                  .find({
+                    LATITUDE: { $lte: latitude },
+                    LONGITUDE: { $gte: longitude }
+                  })
+                  .sort({ LATITUDE: -1, LONGITUDE: 1 })
+                  .limit(50)
+                  .exec()
+                  .then(closestLessMore => {
+                    odpModel
+                      .find({
+                        LATITUDE: { $gte: latitude },
+                        LONGITUDE: { $lte: longitude }
+                      })
+                      .sort({ LATITUDE: 1, LONGITUDE: -1 })
+                      .limit(50)
+                      .exec()
+                      .then(closestMoreLess => {
+                        const less = FindClosestNode(req.query, closestLess);
+                        const more = FindClosestNode(req.query, closestMore);
+                        const lessMore = FindClosestNode(
+                          req.query,
+                          closestLessMore
+                        );
+                        const moreLess = FindClosestNode(
+                          req.query,
+                          closestMoreLess
+                        );
+                        const nums = [
+                          less.closestDistance,
+                          more.closestDistance,
+                          lessMore.closestDistance,
+                          moreLess.closestDistance
+                        ];
+                        const points = [less, more, lessMore, moreLess];
+                        const closest = Math.min.apply(Math, nums);
+                        const closestValue = points.filter(point => {
+                          return point.closestDistance === closest;
+                        })[0];
 
-                if (less.closestDistance < more.closestDistance) {
-                  res.status(200).send({ data: less.closestPoint });
-                } else {
-                  res.status(200).send({ data: more.closestPoint });
-                }
+                        res
+                          .status(200)
+                          .send({ data: closestValue.closestPoint });
+                      });
+                  });
               });
-          })
-          .catch(err => {
-            res.status(400).send({
-              message: "Seomthing went wrong"
-            });
           });
       }
     })
     .catch(err => {
       console.log(err);
       res.status(400).send({
-        message: "Seomthing went wrong"
+        message: "Something went wrongs"
       });
     });
 };
