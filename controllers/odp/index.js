@@ -113,7 +113,7 @@ exports.closestODP = (req, res) => {
     .catch(err => {
       console.log(err);
       res.status(400).send({
-        message: "Something went wrongs"
+        message: "Something went wrong."
       });
     });
 };
