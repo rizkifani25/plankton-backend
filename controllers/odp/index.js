@@ -43,38 +43,38 @@ exports.closestODP = (req, res) => {
       } else {
         odpModel
           .find({
-            LATITUDE: { $lte: latitude },
-            LONGITUDE: { $lte: longitude }
+            LATITUDE: { $lte: latitude, $exists: true, $ne: "" },
+            LONGITUDE: { $lte: longitude, $exists: true, $ne: "" }
           })
-          .sort({ LATITUDE: -1, LONGITUDE: -1 })
-          .limit(50)
+          .sort({ LATITUDE: 1, LONGITUDE: 1 })
+          .limit(200)
           .exec()
           .then(closestLess => {
             odpModel
               .find({
-                LATITUDE: { $gte: latitude },
-                LONGITUDE: { $gte: longitude }
+                LATITUDE: { $gte: latitude, $exists: true, $ne: "" },
+                LONGITUDE: { $gte: longitude, $exists: true, $ne: "" }
               })
               .sort({ LATITUDE: 1, LONGITUDE: 1 })
-              .limit(50)
+              .limit(200)
               .exec()
               .then(closestMore => {
                 odpModel
                   .find({
-                    LATITUDE: { $lte: latitude },
-                    LONGITUDE: { $gte: longitude }
+                    LATITUDE: { $lte: latitude, $exists: true, $ne: "" },
+                    LONGITUDE: { $gte: longitude, $exists: true, $ne: "" }
                   })
                   .sort({ LATITUDE: -1, LONGITUDE: 1 })
-                  .limit(50)
+                  .limit(200)
                   .exec()
                   .then(closestLessMore => {
                     odpModel
                       .find({
-                        LATITUDE: { $gte: latitude },
-                        LONGITUDE: { $lte: longitude }
+                        LATITUDE: { $gte: latitude, $exists: true, $ne: "" },
+                        LONGITUDE: { $lte: longitude, $exists: true, $ne: "" }
                       })
                       .sort({ LATITUDE: 1, LONGITUDE: -1 })
-                      .limit(50)
+                      .limit(200)
                       .exec()
                       .then(closestMoreLess => {
                         const less = FindClosestNode(req.query, closestLess);
@@ -87,6 +87,8 @@ exports.closestODP = (req, res) => {
                           req.query,
                           closestMoreLess
                         );
+                        console.log(req.query);
+                        console.log(closestLess);
                         const nums = [
                           less.closestDistance,
                           more.closestDistance,
