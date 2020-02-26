@@ -91,8 +91,6 @@ exports.closestODP = (req, res) => {
                                 return point.closestDistance === closest;
                             })[0];
 
-                            console.log(less, more, lessMore, moreLess)
-
                             res.status(200).send({data: closestValue.closestPoint});
                         });
                     });
