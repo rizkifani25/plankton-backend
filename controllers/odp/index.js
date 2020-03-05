@@ -21,14 +21,25 @@ const FindClosestNode = (origin, points) => {
 
     // console.log(closestPoint, closestDistance);
 
-    return {closestPoint, closestDistance};
+    return {
+        closestPoint,
+        closestDistance
+    };
 };
 
 exports.closestODP = (req, res) => {
-    const {latitude, longitude} = req.query;
-    odpModel.findOne({LATITUDE: latitude, LONGITUDE: longitude}).exec().then(data => {
+    const {
+        latitude,
+        longitude
+    } = req.query;
+    odpModel.findOne({
+        LATITUDE: latitude,
+        LONGITUDE: longitude
+    }).exec().then(data => {
         if (data) {
-            res.status(200).send({data});
+            res.status(200).send({
+                data
+            });
             return;
         } else {
 
@@ -43,7 +54,10 @@ exports.closestODP = (req, res) => {
                     $exists: true,
                     $ne: ""
                 }
-            }).sort({LATITUDE: -1, LONGITUDE: -1}).limit(10).exec().then(closestLess => {
+            }).sort({
+                LATITUDE: -1,
+                LONGITUDE: -1
+            }).limit(100).exec().then(closestLess => {
                 odpModel.find({
                     LATITUDE: {
                         $gte: latitude,
@@ -55,7 +69,10 @@ exports.closestODP = (req, res) => {
                         $exists: true,
                         $ne: ""
                     }
-                }).sort({LATITUDE: 1, LONGITUDE: 1}).limit(10).exec().then(closestMore => {
+                }).sort({
+                    LATITUDE: 1,
+                    LONGITUDE: 1
+                }).limit(100).exec().then(closestMore => {
                     odpModel.find({
                         LATITUDE: {
                             $lte: latitude,
@@ -67,7 +84,10 @@ exports.closestODP = (req, res) => {
                             $exists: true,
                             $ne: ""
                         }
-                    }).sort({LATITUDE: -1, LONGITUDE: 1}).limit(10).exec().then(closestLessMore => {
+                    }).sort({
+                        LATITUDE: -1,
+                        LONGITUDE: 1
+                    }).limit(100).exec().then(closestLessMore => {
                         odpModel.find({
                             LATITUDE: {
                                 $gte: latitude,
@@ -79,7 +99,10 @@ exports.closestODP = (req, res) => {
                                 $exists: true,
                                 $ne: ""
                             }
-                        }).sort({LATITUDE: 1, LONGITUDE: -1}).limit(10).exec().then(closestMoreLess => {
+                        }).sort({
+                            LATITUDE: 1,
+                            LONGITUDE: -1
+                        }).limit(100).exec().then(closestMoreLess => {
                             const less = FindClosestNode(req.query, closestLess);
                             const more = FindClosestNode(req.query, closestMore);
                             const lessMore = FindClosestNode(req.query, closestLessMore);
@@ -91,7 +114,9 @@ exports.closestODP = (req, res) => {
                                 return point.closestDistance === closest;
                             })[0];
 
-                            res.status(200).send({data: closestValue.closestPoint});
+                            res.status(200).send({
+                                data: closestValue.closestPoint
+                            });
                         });
                     });
                 });
@@ -99,23 +124,30 @@ exports.closestODP = (req, res) => {
         }
     }).catch(err => {
         console.log(err);
-        res.status(400).send({message: "Something went wrong."});
+        res.status(400).send({
+            message: "Something went wrong."
+        });
     });
 };
 
 exports.getODPByWitel = async (req, res) => {
     odpModel.find().distinct("WITEL").exec().then(response => {
-        res.status(200).send({data: response});
+        res.status(200).send({
+            data: response
+        });
     });
 };
 
 exports.getODPByDatel = async (req, res) => {
     let query;
-    req.query.witel == null ? (query =
-        {}) : (query =
-        { WITEL: req.query.witel
+    req.query.witel == null ? (query = {}) : (query = {
+        WITEL: req.query.witel
     });
-    odpModel.find(query, {_id: 0}).distinct("DATEL").exec().then(response => {
-        res.status(200).send({data: response});
+    odpModel.find(query, {
+        _id: 0
+    }).distinct("DATEL").exec().then(response => {
+        res.status(200).send({
+            data: response
+        });
     });
 };
