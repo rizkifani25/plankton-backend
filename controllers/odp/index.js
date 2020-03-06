@@ -1,134 +1,139 @@
 const odpModel = require("../../models/odp");
+const odpModelNew = require("../../models/odp/newOdp")
 
 const convertNumberFormat = number => {
     return number.replace(/,/, ".");
 };
 
-const FindClosestNode = (origin, points) => {
-    let closestDistance = Infinity;
-    let closestPoint;
-
-    points.map(point => {
-        const deltaX = Math.pow(parseFloat(convertNumberFormat(origin.latitude)) - parseFloat(convertNumberFormat(point.LATITUDE)), 2);
-        const deltaY = Math.pow(parseFloat(convertNumberFormat(origin.longitude)) - parseFloat(convertNumberFormat(point.LONGITUDE)), 2);
-        const jarak = Math.sqrt(deltaX + deltaY);
-
-        if (jarak <= closestDistance) {
-            closestDistance = jarak;
-            closestPoint = point;
-        }
-    });
-
-    // console.log(closestPoint, closestDistance);
-
-    return {
-        closestPoint,
-        closestDistance
-    };
-};
 
 exports.closestODP = (req, res) => {
     const {
         latitude,
         longitude
-    } = req.query;
-    odpModel.findOne({
-        LATITUDE: latitude,
-        LONGITUDE: longitude
-    }).exec().then(data => {
-        if (data) {
-            res.status(200).send({
-                data
-            });
-            return;
-        } else {
+    } = req.query
 
-            odpModel.find({
-                LATITUDE: {
-                    $lte: latitude,
-                    $exists: true,
-                    $ne: ""
-                },
-                LONGITUDE: {
-                    $lte: longitude,
-                    $exists: true,
-                    $ne: ""
-                }
-            }).sort({
-                LATITUDE: -1,
-                LONGITUDE: -1
-            }).limit(100).exec().then(closestLess => {
-                odpModel.find({
-                    LATITUDE: {
-                        $gte: latitude,
-                        $exists: true,
-                        $ne: ""
-                    },
-                    LONGITUDE: {
-                        $gte: longitude,
-                        $exists: true,
-                        $ne: ""
-                    }
-                }).sort({
-                    LATITUDE: 1,
-                    LONGITUDE: 1
-                }).limit(100).exec().then(closestMore => {
-                    odpModel.find({
-                        LATITUDE: {
-                            $lte: latitude,
-                            $exists: true,
-                            $ne: ""
-                        },
-                        LONGITUDE: {
-                            $gte: longitude,
-                            $exists: true,
-                            $ne: ""
-                        }
-                    }).sort({
-                        LATITUDE: -1,
-                        LONGITUDE: 1
-                    }).limit(100).exec().then(closestLessMore => {
-                        odpModel.find({
-                            LATITUDE: {
-                                $gte: latitude,
-                                $exists: true,
-                                $ne: ""
-                            },
-                            LONGITUDE: {
-                                $lte: longitude,
-                                $exists: true,
-                                $ne: ""
-                            }
-                        }).sort({
-                            LATITUDE: 1,
-                            LONGITUDE: -1
-                        }).limit(100).exec().then(closestMoreLess => {
-                            const less = FindClosestNode(req.query, closestLess);
-                            const more = FindClosestNode(req.query, closestMore);
-                            const lessMore = FindClosestNode(req.query, closestLessMore);
-                            const moreLess = FindClosestNode(req.query, closestMoreLess);
-                            const nums = [less.closestDistance, more.closestDistance, lessMore.closestDistance, moreLess.closestDistance];
-                            const points = [less, more, lessMore, moreLess];
-                            const closest = Math.min.apply(Math, nums);
-                            const closestValue = points.filter(point => {
-                                return point.closestDistance === closest;
-                            })[0];
-
-                            res.status(200).send({
-                                data: closestValue.closestPoint
-                            });
-                        });
-                    });
-                });
-            });
-        }
-    }).catch(err => {
-        console.log(err);
-        res.status(400).send({
-            message: "Something went wrong."
-        });
-    });
+    if (latitude && longitude) {
+        odpModelNew.aggregate().near({
+            near: [parseFloat(longitude), parseFloat(latitude)],
+            maxDistance: 100,
+            spherical: true,
+            distanceField: "dist.calculated"
+        }).limit(1).then(data => {
+            res.send({
+                message: "near",
+                data: data[0]
+            })
+        })
+        return
+    }
 };
+
+// exports.GetNewOdp = (req, res) => {
+//     const {
+//         lat,
+//         lng
+//     } = req.query
+
+//     if (lat && lng) {
+//         odpModelNew.aggregate().near({
+//             near: [parseFloat(lng), parseFloat(lat)],
+//             maxDistance: 100,
+//             spherical: true,
+//             distanceField: "dist.calculated"
+//         }).limit(1).then(data => {
+//             res.send({
+//                 message: "near",
+//                 data: data[0]
+//             })
+//         })
+//         return
+//     }
+//     odpModelNew.find({}).sort({
+//         LATITUDE: -1
+//     }).limit(10).exec().then(data => {
+//         res.send({
+//             data
+//         })
+//     })
+// }
+
+// exports.TestingOdp = (req, res) => {
+//     const {
+//         latitude,
+//         longitude,
+//         page = 1
+//     } = req.query;
+//     const limit = 50000
+
+//     odpModel.find({}).skip((page - 1) * limit).limit(limit).exec().then(closestLess => {
+
+//             console.log(closestLess.length)
+//             let itemsAdded = 0
+//             closestLess.map(node => {
+//                 const {
+//                     _id,
+//                     ODP_NAME,
+//                     LATITUDE,
+//                     LONGITUDE,
+//                     REGIONAL,
+//                     WITEL,
+//                     DATEL,
+//                     STO
+//                 } = node
+
+//                 if (node.LATITUDE && node.LONGITUDE && node.LATITUDE.length !== 0 && node.LONGITUDE.length !== 0) {
+//                     itemsAdded += 1
+//                     const newOdpNew = new odpModelNew({
+//                         _id,
+//                         ODP_NAME,
+//                         geometry: {
+//                             type: "point",
+//                             coordinates: [parseFloat(convertNumberFormat(LONGITUDE)), parseFloat(convertNumberFormat(LATITUDE))]
+//                         },
+//                         REGIONAL,
+//                         WITEL,
+//                         DATEL,
+//                         STO
+//                     })
+//                     newOdpNew.save().catch(err => {})
+//                 }
+//             })
+
+//             res.send({
+//                 data: closestLess.length,
+//                 page,
+//                 itemsAdded
+//             })
+
+//         })
+//         .catch(errr => {
+//             console.log(errr)
+//         })
+
+// }
+
+// const FindClosestNode = (origin, points) => {
+//     let closestDistance = Infinity;
+//     let closestPoint;
+
+//     points.map(point => {
+//         const deltaX = Math.pow(parseFloat(convertNumberFormat(origin.latitude)) - parseFloat(convertNumberFormat(point.LATITUDE)), 2);
+//         const deltaY = Math.pow(parseFloat(convertNumberFormat(origin.longitude)) - parseFloat(convertNumberFormat(point.LONGITUDE)), 2);
+//         const jarak = Math.sqrt(deltaX + deltaY);
+
+//         if (jarak <= closestDistance) {
+//             closestDistance = jarak;
+//             closestPoint = point;
+//         }
+//     });
+
+//     // console.log(closestPoint, closestDistance);
+
+//     return {
+//         closestPoint,
+//         closestDistance
+//     };
+// };
 
 exports.getODPByWitel = async (req, res) => {
     odpModel.find().distinct("WITEL").exec().then(response => {
