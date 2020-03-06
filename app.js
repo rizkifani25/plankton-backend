@@ -57,7 +57,8 @@ mongoose
       process.env.DB_NAME,
     {
       useUnifiedTopology: true,
-      useNewUrlParser: true
+      useNewUrlParser: true,
+      useCreateIndex: true
     }
   )
   .then(console.log("DB connected"))
