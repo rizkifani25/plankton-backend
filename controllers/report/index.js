@@ -194,11 +194,19 @@ exports.filterReport = async (req, res) => {
   reportSchema
     .find(query, { __v: 0 })
     .skip(limit * (page - 1))
-    .limit(limit)
+    .limit(limit + 1)
     .exec()
     .then(response => {
+      if(response.length > limit){
+        res.status(200).send({
+          data: response.slice(0,-1),
+          hasNextPage: true
+        });
+        return;
+      }
       res.status(200).send({
-        data: response
+        data: response,
+        hasNextPage: false
       });
     })
     .catch(err => {
