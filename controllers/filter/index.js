@@ -125,26 +125,26 @@ exports.countReportByRegional = async (req, res) => {
     });
 };
 
-counterRegional = {
-  {
-    regional: "Regional 3",
-    data: [
-      {witel: "witel1", total: "total1"},
-      {witel: "witel2", total: "total2"}
-    ]
-  },
-  {
-    regional: "Regional 4",
-    data: [
-      {witel: "witel1", total: "total1"},
-      {witel: "witel2", total: "total2"}
-    ]
-  },
-  {
-    regional: "Regional 5",
-    data: [
-      {witel: "witel1", total: "total1"},
-      {witel: "witel2", total: "total2"}
-    ]
-  }
-}
+// counterRegional = {
+//   {
+//     regional: "Regional 3",
+//     data: [
+//       {witel: "witel1", total: "total1"},
+//       {witel: "witel2", total: "total2"}
+//     ]
+//   },
+//   {
+//     regional: "Regional 4",
+//     data: [
+//       {witel: "witel1", total: "total1"},
+//       {witel: "witel2", total: "total2"}
+//     ]
+//   },
+//   {
+//     regional: "Regional 5",
+//     data: [
+//       {witel: "witel1", total: "total1"},
+//       {witel: "witel2", total: "total2"}
+//     ]
+//   }
+// }
