@@ -15,9 +15,14 @@ exports.FILTER_REPORT = "/reports/filter";
 exports.GET_STATUSLIST = "/statuses";
 exports.UPDATE_REPORT = "/reports/update";
 
+exports.REGIONAL = "/regional";
 exports.WITEL = "/witel";
 exports.DATEL = "/datel";
 exports.GET_ALL_WITEL = "/get-witel";
+exports.FILTER = "/filter";
+
+//count report
+exports.COUNT_REPORT_BY_REGIONAL = "/report-regional";
 
 // alpro
 exports.ALPROS_ICON = "/alpros";

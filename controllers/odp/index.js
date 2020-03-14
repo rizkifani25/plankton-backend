@@ -1,31 +1,31 @@
 const odpModel = require("../../models/odp");
-const odpModelNew = require("../../models/odp/newOdp")
+const odpModelNew = require("../../models/odp/newOdp");
 
 const convertNumberFormat = number => {
-    return number.replace(/,/, ".");
+  return number.replace(/,/, ".");
 };
 
-
 exports.closestODP = (req, res) => {
-    const {
-        latitude,
-        longitude
-    } = req.query
+  const { latitude, longitude } = req.query;
 
-    if (latitude && longitude) {
-        odpModelNew.aggregate().near({
-            near: [parseFloat(longitude), parseFloat(latitude)],
-            maxDistance: 100,
-            spherical: true,
-            distanceField: "dist.calculated"
-        }).limit(1).then(data => {
-            res.send({
-                message: "near",
-                data: data[0]
-            })
-        })
-        return
-    }
+  if (latitude && longitude) {
+    odpModelNew
+      .aggregate()
+      .near({
+        near: [parseFloat(longitude), parseFloat(latitude)],
+        maxDistance: 100,
+        spherical: true,
+        distanceField: "dist.calculated"
+      })
+      .limit(1)
+      .then(data => {
+        res.send({
+          message: "near",
+          data: data[0]
+        });
+      });
+    return;
+  }
 };
 
 // exports.GetNewOdp = (req, res) => {
@@ -136,23 +136,53 @@ exports.closestODP = (req, res) => {
 // };
 
 exports.getODPByWitel = async (req, res) => {
-    odpModel.find().distinct("WITEL").exec().then(response => {
-        res.status(200).send({
-            data: response
-        });
+  odpModel
+    .find()
+    .distinct("WITEL")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
     });
 };
 
 exports.getODPByDatel = async (req, res) => {
-    let query;
-    req.query.witel == null ? (query = {}) : (query = {
+  let query;
+  req.query.witel == null
+    ? (query = {})
+    : (query = {
         WITEL: req.query.witel
+      });
+  odpModel
+    .find(query, {
+      _id: 0
+    })
+    .distinct("STO")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
     });
-    odpModel.find(query, {
-        _id: 0
-    }).distinct("DATEL").exec().then(response => {
-        res.status(200).send({
-            data: response
-        });
+};
+
+exports.getRegional = async (req, res) => {
+  let query;
+  req.query.reg == null
+    ? (query = {})
+    : (query = {
+        REGIONAL: "Regional " + req.query.reg
+      });
+  odpModel
+    .find(query, {
+      _id: 0
+    })
+    .distinct("WITEL")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
     });
 };

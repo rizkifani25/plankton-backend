@@ -29,6 +29,11 @@ const createReportRouter = require("./routes/report/create-report");
 const updateReportRouter = require("./routes/report/update-report");
 const filterReportRouter = require("./routes/report/filter-report");
 const getStatusListRouter = require("./routes/report/get-status-list");
+const getRegionalRerportRouter = require("./routes/report/get-regional-report");
+const filterOverviewRouter = require("./routes/overview/tabel");
+
+// count report
+const countReportByRegionalRouter = require("./routes/overview/counter");
 
 //witel
 const getByWitelReportRouter = require("./routes/report/get-witel-report");
@@ -91,9 +96,14 @@ app.use(endpoint.FILTER_REPORT, filterReportRouter);
 app.use(endpoint.GET_STATUSLIST, getStatusListRouter);
 app.use(endpoint.UPDATE_REPORT, updateReportRouter);
 
+// counter report
+app.use(endpoint.COUNT_REPORT_BY_REGIONAL, countReportByRegionalRouter);
+
+app.use(endpoint.REGIONAL, getRegionalRerportRouter);
 app.use(endpoint.WITEL, getByWitelReportRouter);
 app.use(endpoint.DATEL, getByDatelReportRouter);
 app.use(endpoint.GET_ALL_WITEL, getAllWitelRouter);
+app.use(endpoint.FILTER, filterOverviewRouter);
 
 // allpro
 app.use(endpoint.ALPROS_ICON, alprosRouter);
