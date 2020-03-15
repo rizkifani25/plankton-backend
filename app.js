@@ -7,12 +7,18 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-// main
+// user
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/user/users");
 const registerRouter = require("./routes/user/register");
 const loginRouter = require("./routes/user/login");
 const authLoginRouter = require("./routes/user/auth");
+const getUserReportRouter = require("./routes/user/get-user-report");
+
+// validator
+const getAllReportRouter = require("./routes/validator/all-report");
+const updateReportRouter = require("./routes/validator/update-report");
+const overviewReportRouter = require("./routes/overview");
 
 // alpro
 const alprosRouter = require("./routes/alpro");
@@ -22,18 +28,17 @@ const alprosDescRouter = require("./routes/alpro-desc");
 const odpRouter = require("./routes/odp");
 
 // report
-const getAllReportRouter = require("./routes/report/all-report");
-const getReportRouter = require("./routes/report/get-report");
-const getUserReportRouter = require("./routes/report/get-user-report");
 const createReportRouter = require("./routes/report/create-report");
-const updateReportRouter = require("./routes/report/update-report");
+const getReportRouter = require("./routes/report/get-report");
 const filterReportRouter = require("./routes/report/filter-report");
-const getStatusListRouter = require("./routes/report/get-status-list");
 
-//witel
-const getByWitelReportRouter = require("./routes/report/get-witel-report");
-const getByDatelReportRouter = require("./routes/report/get-datel-report");
-const getAllWitelRouter = require("./routes/witel");
+// get list
+const getListStatusRouter = require("./routes/report/get-status-list");
+const getListRegionalRouter = require("./routes/filter/get-list-regional");
+const getListWitelRouter = require("./routes/filter/get-list-witel");
+const getListDatelRouter = require("./routes/filter/get-list-datel");
+const getListSTORouter = require("./routes/filter/get-list-sto");
+const getAllWitelRouter = require("./routes/filter/get-list-all-witel");
 
 const app = express();
 
@@ -74,25 +79,31 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// main
+// user
 app.use(endpoint.HOME, indexRouter);
 app.use(endpoint.USERS, usersRouter);
 app.use(endpoint.REGISTER_V1, registerRouter);
 app.use(endpoint.LOGIN, loginRouter);
 app.use(endpoint.GET_USER_LOGIN, authLoginRouter);
+app.use(endpoint.GET_USER_REPORT, getUserReportRouter);
+
+// validator
+app.use(endpoint.UPDATE_REPORT, updateReportRouter);
+app.use(endpoint.GET_LIST_ALL_REPORT, getAllReportRouter);
+app.use(endpoint.OVERVIEW_REPORT, overviewReportRouter);
 
 //report
-app.use(endpoint.LIST_ALL_REPORT, getAllReportRouter);
 app.use(endpoint.GET_REPORT, getReportRouter);
 app.use(endpoint.CREATE_NEW_REPORT, createReportRouter);
-app.use(endpoint.GET_USER_REPORT, getUserReportRouter);
 app.use(endpoint.FILTER_REPORT, filterReportRouter);
-app.use(endpoint.GET_STATUSLIST, getStatusListRouter);
-app.use(endpoint.UPDATE_REPORT, updateReportRouter);
 
-app.use(endpoint.WITEL, getByWitelReportRouter);
-app.use(endpoint.DATEL, getByDatelReportRouter);
-app.use(endpoint.GET_ALL_WITEL, getAllWitelRouter);
+// get list
+app.use(endpoint.GET_LIST_STATUS, getListStatusRouter);
+app.use(endpoint.GET_LIST_REGIONAL, getListRegionalRouter);
+app.use(endpoint.GET_LIST_WITEL, getListWitelRouter);
+app.use(endpoint.GET_LIST_DATEL, getListDatelRouter);
+app.use(endpoint.GET_LIST_STO, getListSTORouter);
+app.use(endpoint.GET_LIST_ALL_WITEL, getAllWitelRouter);
 
 // allpro
 app.use(endpoint.ALPROS_ICON, alprosRouter);
