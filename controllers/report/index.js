@@ -11,28 +11,6 @@ const getCurrentDate = () => {
     " "}${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
 };
 
-exports.updateReport = async (req, res) => {
-  const { status, _id } = req.query;
-  const updatedStatus = utilStatus.findStatus(parseInt(status));
-  const query = {
-    _id: _id
-  };
-  const update = {
-    status: updatedStatus
-  };
-  reportSchema
-    .findOneAndUpdate(query, update)
-    .then(response => {
-      res.status(200).send({
-        message: "Berhasil memperbarui status laporan."
-      });
-    })
-    .catch(err => {
-      res.status(400).send({
-        message: "Gagal memperbarui status laporan."
-      });
-    });
-};
 exports.uploadReport = async (req, res) => {
   const queryRequest = objects.sanitizeData(req.query);
   const {
@@ -132,45 +110,6 @@ exports.getReport = async (req, res) => {
   }
 };
 
-exports.getAllReports = async (req, res) => {
-  const query = {};
-  reportSchemapostpost
-    .find(query, { __v: 0 })
-    .exec()
-    .then(response => {
-      res.status(200).send({
-        data: response
-      });
-    })
-    .catch(err => {
-      res.status(400).send({
-        message: "Kesalahan server."
-      });
-    });
-};
-
-exports.getReportByUser = async (req, res) => {
-  const { user_phone } = req.query;
-
-  const query = {
-    user_phone: user_phone
-  };
-
-  reportSchema
-    .find(query, { __v: 0 })
-    .exec()
-    .then(response => {
-      res.status(200).send({
-        data: response
-      });
-    })
-    .catch(err => {
-      res.status(400).send({
-        message: "Kesalahan server."
-      });
-    });
-};
-
 exports.filterReport = async (req, res) => {
   let queryRequest = objects.sanitizeData(req.query);
   const {
@@ -197,9 +136,9 @@ exports.filterReport = async (req, res) => {
     .limit(limit + 1)
     .exec()
     .then(response => {
-      if(response.length > limit){
+      if (response.length > limit) {
         res.status(200).send({
-          data: response.slice(0,-1),
+          data: response.slice(0, -1),
           hasNextPage: true
         });
         return;

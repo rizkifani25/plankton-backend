@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const userModel = require("../../models/user");
+const reportSchema = require("../../models/report");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -87,6 +88,29 @@ exports.registerUser = async (req, res) => {
     .catch(err => {
       res.send({
         message: err
+      });
+    });
+};
+
+// GET USER REPORT
+exports.getReportByUser = async (req, res) => {
+  const { user_phone } = req.query;
+
+  const query = {
+    user_phone: user_phone
+  };
+
+  reportSchema
+    .find(query, { __v: 0 })
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: "Kesalahan server."
       });
     });
 };

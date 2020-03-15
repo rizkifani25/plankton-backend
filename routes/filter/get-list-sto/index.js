@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
 
-const Reports = require("../../../controllers/odp");
+const listSTO = require("../../../controllers/filter");
 
-router.get("/", Reports.getODPByWitel);
+router.get("/", listSTO.getListSTO);
 
 module.exports = router;

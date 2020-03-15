@@ -1,72 +1,102 @@
 const odpModel = require("../../models/odp");
 const reportModel = require("../../models/report");
+const witelModel = require("../../models/witel");
 
-exports.filterTabel = async (req, res) => {
-  const { regional, witel, datel, sto } = req.query;
+// GET LIST REGIONAL
+exports.getListRegional = async (req, res) => {
   let query = {};
+  odpModel
+    .find(query, {
+      _id: 0
+    })
+    .distinct("REGIONAL")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    });
+};
 
-  if (regional == null && witel == null && datel == null && sto == null) {
-    odpModel
-      .find(query, { _id: 0 })
-      .distinct("REGIONAL")
-      .exec()
-      .then(response => {
-        res.status(200).send({
-          data: response
-        });
-      })
-      .catch(response => {
-        res.status(400).send({
-          data: response
-        });
+// GET LIST WITEL
+exports.getListWitel = async (req, res) => {
+  let query;
+  req.query.reg == null
+    ? (query = {})
+    : (query = {
+        REGIONAL: req.query.reg
       });
-  } else if (
-    regional != null &&
-    witel == null &&
-    datel == null &&
-    sto == null
-  ) {
-    query = {
-      REGIONAL: regional
-    };
-    odpModel
-      .find(query, { _id: 0 })
-      .distinct("WITEL")
-      .exec()
-      .then(response => {
-        res.status(200).send({
-          data: response
-        });
-      })
-      .catch(response => {
-        res.status(400).send({
-          data: response
-        });
+
+  odpModel
+    .find(query, { _id: 0 })
+    .distinct("WITEL")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
       });
-  } else if (
-    regional != null &&
-    witel != null &&
-    datel == null &&
-    sto == null
-  ) {
-    query = {
-      WITEL: witel
-    };
-    odpModel
-      .find(query, { _id: 0 })
-      .distinct("DATEL")
-      .exec()
-      .then(response => {
-        res.status(200).send({
-          data: response
-        });
-      })
-      .catch(response => {
-        res.status(400).send({
-          data: response
-        });
+    });
+};
+
+// GET LIST DATEL
+exports.getListDatel = async (req, res) => {
+  let query;
+  req.query.witel == null
+    ? (query = {})
+    : (query = {
+        WITEL: req.query.witel
       });
-  }
+  odpModel
+    .find(query, { _id: 0 })
+    .distinct("DATEL")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    });
+};
+
+// GET LIST STO
+exports.getListSTO = async (req, res) => {
+  let query;
+  req.query.witel == null
+    ? (query = {})
+    : (query = {
+        WITEL: req.query.witel
+      });
+  odpModel
+    .find(query, { _id: 0 })
+    .distinct("STO")
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    });
+};
+
+// GET ALL WITEL WITH DATEL INSIDE
+exports.getAllWitel = async (req, res) => {
+  let query;
+  req.query.witel == null
+    ? (query = {})
+    : (query = {
+        WITEL: req.query.witel
+      });
+  witelModel
+    .find(query, { _id: 0 })
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: "Kesalahan server."
+      });
+    });
 };
 
 exports.countReportByRegional = async (req, res) => {
