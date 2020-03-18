@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
 
-const Status = require("../../../services/status");
+const newODP = require("../../../controllers/odp");
 
-router.get("/", Status.getStatus);
+router.get("/", newODP.addNewODP);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const odpModelNew = require("../../models/odp/newOdp");
 
 exports.closestODP = (req, res) => {
@@ -21,4 +22,44 @@ exports.closestODP = (req, res) => {
       });
     return;
   }
+};
+
+exports.addNewODP = (req, res) => {
+  const {
+    odpName,
+    longitude,
+    latitude,
+    regional,
+    witel,
+    datel,
+    sto
+  } = req.query;
+
+  const newODP = odpModelNew({
+    _id: new mongoose.Schema.Types.ObjectId(),
+    ODP_NAME: odpName,
+    geometry: {
+      _id: new mongoose.Schema.Types.ObjectId(),
+      type: "point",
+      coordinates: [longitude, latitude]
+    },
+    REGIONAL: regional,
+    WITEL: witel,
+    DATEL: datel,
+    STO: sto
+  });
+
+  newODP
+    .save()
+    .then(response => {
+      res.status(201).send({
+        message: "Berhasil menambahkan ODP baru.",
+        odp_id: newODP._id
+      });
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: "Gagal menambahkan ODP baru."
+      });
+    });
 };

@@ -19,6 +19,7 @@ const getUserReportRouter = require("./routes/user/get-user-report");
 const getAllReportRouter = require("./routes/validator/all-report");
 const updateReportRouter = require("./routes/validator/update-report");
 const overviewReportRouter = require("./routes/overview");
+const overviewTesting = require("./routes/overview/testing");
 
 // alpro
 const alprosRouter = require("./routes/alpro");
@@ -26,6 +27,7 @@ const alprosDescRouter = require("./routes/alpro-desc");
 
 // list odp
 const odpRouter = require("./routes/odp");
+const addNewODPRouter = require("./routes/odp/addNew");
 
 // report
 const createReportRouter = require("./routes/report/create-report");
@@ -91,6 +93,7 @@ app.use(endpoint.GET_USER_REPORT, getUserReportRouter);
 app.use(endpoint.UPDATE_REPORT, updateReportRouter);
 app.use(endpoint.GET_LIST_ALL_REPORT, getAllReportRouter);
 app.use(endpoint.OVERVIEW_REPORT, overviewReportRouter);
+app.use(endpoint.OVERVIEW_TESTING, overviewTesting);
 
 //report
 app.use(endpoint.GET_REPORT, getReportRouter);
@@ -111,6 +114,7 @@ app.use(endpoint.ALPROS_DESC, alprosDescRouter);
 
 // odp
 app.use(endpoint.LIST_ODP, odpRouter);
+app.use(endpoint.ADD_NEW_ODP, addNewODPRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
