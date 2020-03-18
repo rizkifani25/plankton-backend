@@ -107,9 +107,9 @@ exports.improvedOverview = async (req, res) => {
     tempWitel = [],
     tempDatel = [],
     tempStatus = [],
-    query = {
-      WITEL: witel
-    };
+    query = {};
+
+  !witel ? (query = {}) : (query = { WITEL: witel });
 
   await witelModel
     .find(query)
