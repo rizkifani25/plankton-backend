@@ -1,5 +1,5 @@
-const utilStatus = require("./status");
 const reportSchema = require("../../models/report");
+const utilStatus = require("../../services/status");
 
 // GET ALL REPORTS
 exports.getAllReports = async (req, res) => {

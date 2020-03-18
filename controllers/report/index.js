@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const reportSchema = require("../../models/report");
 const objects = require("../../services/sanitizedata");
-const utilStatus = require("./status");
+const utilStatus = require("../../services/status");
 
 mongoose.set("useFindAndModify", false);
 

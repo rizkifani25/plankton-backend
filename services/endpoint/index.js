@@ -24,6 +24,7 @@ exports.ADD_NEW_ODP = "/odp/add-new";
 exports.GET_LIST_ALL_REPORT = "/reports";
 exports.UPDATE_REPORT = "/reports/update";
 exports.OVERVIEW_REPORT = "/overview";
+exports.OVERVIEW_TESTING = "/overview/testing";
 
 // get list
 exports.GET_LIST_ALL_WITEL = "/get-witel";
