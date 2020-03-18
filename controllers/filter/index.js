@@ -100,6 +100,58 @@ exports.getAllWitel = async (req, res) => {
     });
 };
 
+exports.improvedOverview = async (req, res) => {
+  const { witel } = req.query;
+  const status = utilStatus.getAllStatus();
+  let listWitel = [],
+    tempWitel = [],
+    tempDatel = [],
+    tempStatus = [],
+    query = {
+      WITEL: witel
+    };
+
+  await witelModel
+    .find(query)
+    .exec()
+    .then(async response => {
+      listWitel = response;
+      tempWitel = [];
+      for (let i = 0; i < listWitel.length; i++) {
+        tempDatel = [];
+        for (let j = 0; j < listWitel[i]["DATEL"].length; j++) {
+          tempStatus = [];
+          for (let k = 0; k < status.length; k++) {
+            let query = {
+              "location.datel": listWitel[i]["DATEL"][j],
+              "status.code": status[k]["code"]
+            };
+            await reportModel.countDocuments(query).then(async response => {
+              let resultStatus = {
+                code: status[k]["code"],
+                total: response
+              };
+              tempStatus.push(resultStatus);
+            });
+          }
+          let resultDatel = {
+            datel: listWitel[i]["DATEL"][j],
+            data: [...tempStatus]
+          };
+          tempDatel.push(resultDatel);
+        }
+        let resultWitel = {
+          witel: listWitel[i]["WITEL"],
+          data: [...tempDatel]
+        };
+        tempWitel.push(resultWitel);
+      }
+      res.status(200).send({
+        data: tempWitel
+      });
+    });
+}; //50
+
 exports.countReportByRegional = async (req, res) => {
   let query = {};
   let listRegional = [],
@@ -244,7 +296,7 @@ exports.testingOverview = async (req, res) => {
         data: response
       });
     });
-};
+}; //89
 
 exports.testingOverview2 = async (req, res) => {
   let listStatus = utilStatus.getAllStatus();
