@@ -3,6 +3,6 @@ var router = express.Router();
 
 const overview = require("../../controllers/filter");
 
-router.get("/", overview.testingOverview);
+router.get("/", overview.improvedOverview);
 
 module.exports = router;
