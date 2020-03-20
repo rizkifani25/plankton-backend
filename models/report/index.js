@@ -16,7 +16,10 @@ const reportSchema = mongoose.Schema({
     latitude: String,
     longitude: String,
     datel: String,
-    witel: String
+    witel: String,
+    sto: String,
+    reg: String,
+    ODP_NAME: String
   },
   status: Object,
   date: String
