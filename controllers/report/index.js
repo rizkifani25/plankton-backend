@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const reportSchema = require("../../models/report");
 const objects = require("../../services/sanitizedata");
 const utilStatus = require("../../services/status");
+const reportCountSchema = require("../../models/reportCount")
 
 mongoose.set("useFindAndModify", false);
 
@@ -14,62 +15,91 @@ const getCurrentDate = () => {
 exports.uploadReport = async (req, res) => {
   const queryRequest = objects.sanitizeData(req.query);
   const {
-    report_id,
     image_url,
     user,
     alproType,
     detail,
     description,
     datel,
-    witel
+    witel,
+    date,
+    sto,
+    reg,
+    ODP_NAME
   } = queryRequest;
 
-  const date = getCurrentDate();
+  reportCountSchema.findOne({}).then(data => {
 
-  const status = utilStatus.findStatus(100);
 
-  const { latitude, longitude } = queryRequest.coords;
+    const staticReportCount = data.count + 1
+    const report_id = `PL${staticReportCount}`
 
-  const newReport = new reportSchema({
-    _id: report_id,
-    user_phone: user.user_phone,
-    user_name: user.user_name,
-    image_path: image_url,
-    detail: detail,
-    description: description,
-    alproType: {
-      alpro_name: alproType.alpro_name,
-      alpro_code: alproType.alpro_code,
-      icon_path: alproType.icon_path
-    },
-    location: {
+    const status = utilStatus.findStatus(100);
+
+    const {
       latitude,
-      longitude,
-      datel,
-      witel
-    },
-    status,
-    date
-  });
+      longitude
+    } = queryRequest.coords;
 
-  newReport
-    .save()
-    .then(response => {
-      res.status(201).send({
-        message: "Report telah dibuat.",
-        post_id: newReport._id
-      });
-    })
-    .catch(err => {
-      res.status(400).send({
-        message: "Report gagal dibuat."
-      });
+    const newReport = new reportSchema({
+      _id: report_id,
+      user_phone: user.user_phone,
+      user_name: user.user_name,
+      image_path: image_url,
+      detail: detail,
+      description: description,
+      alproType: {
+        alpro_name: alproType.alpro_name,
+        alpro_code: alproType.alpro_code,
+        icon_path: alproType.icon_path
+      },
+      location: {
+        latitude,
+        longitude,
+        datel,
+        witel,
+        sto,
+        reg,
+        ODP_NAME
+      },
+      status,
+      date
     });
+
+    newReport
+      .save()
+      .then(response => {
+        const update = {
+          count: staticReportCount
+        }
+        reportCountSchema.findOneAndUpdate({}, update).then(response => {
+          res.status(201).send({
+            message: "Laporan telah dibuat.",
+            post_id: newReport._id
+          });
+        }).catch(err => {
+          res.status(400).send({
+            message: "Laporan gagal dibuat."
+          })
+        })
+      })
+      .catch(err => {
+        res.status(400).send({
+          message: "Report gagal dibuat."
+        });
+      });
+  })
+
+
 };
 
 exports.getReport = async (req, res) => {
   const report_id = req.query._id;
-  const { user_phone, limit = 10, page = 1 } = req.query;
+  const {
+    user_phone,
+    limit = 10,
+    page = 1
+  } = req.query;
 
   if (report_id) {
     const query = {
@@ -93,7 +123,11 @@ exports.getReport = async (req, res) => {
       user_phone
     };
     reportSchema
-      .find(query, { user_phone: 0, user_name: 0, location: 0 })
+      .find(query, {
+        user_phone: 0,
+        user_name: 0,
+        location: 0
+      })
       .skip(limit * (page - 1))
       .limit(limit)
       .exec()
@@ -131,7 +165,9 @@ exports.filterReport = async (req, res) => {
   if (status) query["status.code"] = status;
 
   reportSchema
-    .find(query, { __v: 0 })
+    .find(query, {
+      __v: 0
+    })
     .skip(limit * (page - 1))
     .limit(limit + 1)
     .exec()
