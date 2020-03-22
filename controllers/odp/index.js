@@ -1,8 +1,16 @@
 const mongoose = require("mongoose");
 const odpModelNew = require("../../models/odp/newOdp");
 
+const convertNumberFormat = (number) =>{
+  return parseFloat(number.toString().replace(',','.'))
+}
+
 exports.closestODP = (req, res) => {
-  const { latitude, longitude } = req.query;
+  const { latitude, longitude, all = false } = req.query;
+  let limit = 1
+  if(all){
+    limit = 10
+  }
 
   if (latitude && longitude) {
     odpModelNew
@@ -13,11 +21,15 @@ exports.closestODP = (req, res) => {
         spherical: true,
         distanceField: "dist.calculated"
       })
-      .limit(1)
+      .limit(limit)
       .then(data => {
+        let responseData = data[0]
+        if(all){
+          responseData = data
+        }
         res.send({
           message: "near",
-          data: data[0]
+          data: responseData
         });
       });
     return;
@@ -25,7 +37,7 @@ exports.closestODP = (req, res) => {
 };
 
 exports.addNewODP = (req, res) => {
-  const {
+  let {
     odpName,
     longitude,
     latitude,
@@ -35,11 +47,13 @@ exports.addNewODP = (req, res) => {
     sto
   } = req.query;
 
+  longitude = convertNumberFormat(longitude)
+  latitude = convertNumberFormat(latitude)
+
   const newODP = odpModelNew({
-    _id: new mongoose.Schema.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
     ODP_NAME: odpName,
     geometry: {
-      _id: new mongoose.Schema.Types.ObjectId(),
       type: "point",
       coordinates: [longitude, latitude]
     },
@@ -58,6 +72,7 @@ exports.addNewODP = (req, res) => {
       });
     })
     .catch(err => {
+      console.log(err)
       res.status(400).send({
         message: "Gagal menambahkan ODP baru."
       });
