@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const odpModelNew = require("../../models/odp/newOdp");
+const odpModel = require("../../models/odp");
 
 const convertNumberFormat = (number) =>{
   return parseFloat(number.toString().replace(',','.'))
@@ -75,6 +76,28 @@ exports.addNewODP = (req, res) => {
       console.log(err)
       res.status(400).send({
         message: "Gagal menambahkan ODP baru."
+      });
+    });
+};
+
+exports.checkODP = (req, res) => {
+  const { odpName } = req.query;
+
+  let query = {
+    ODP_NAME: odpName
+  };
+
+  odpModel
+    .find(query, { _id: 0 })
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    })
+    .catch(response => {
+      res.send({
+        data: response
       });
     });
 };

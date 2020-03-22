@@ -22,11 +22,11 @@ exports.getListRegional = async (req, res) => {
 // GET LIST WITEL
 exports.getListWitel = async (req, res) => {
   let query;
-  req.query.reg == null ?
-    (query = {}) :
-    (query = {
-      REGIONAL: req.query.reg
-    });
+  req.query.reg == null
+    ? (query = {})
+    : (query = {
+        REGIONAL: req.query.reg
+      });
 
   odpModel
     .find(query, {
@@ -44,11 +44,11 @@ exports.getListWitel = async (req, res) => {
 // GET LIST DATEL
 exports.getListDatel = async (req, res) => {
   let query;
-  req.query.witel == null ?
-    (query = {}) :
-    (query = {
-      WITEL: req.query.witel
-    });
+  req.query.witel == null
+    ? (query = {})
+    : (query = {
+        WITEL: req.query.witel
+      });
   odpModel
     .find(query, {
       _id: 0
@@ -65,11 +65,11 @@ exports.getListDatel = async (req, res) => {
 // GET LIST STO
 exports.getListSTO = async (req, res) => {
   let query;
-  req.query.witel == null ?
-    (query = {}) :
-    (query = {
-      WITEL: req.query.witel
-    });
+  req.query.witel == null
+    ? (query = {})
+    : (query = {
+        WITEL: req.query.witel
+      });
   odpModel
     .find(query, {
       _id: 0
@@ -86,11 +86,11 @@ exports.getListSTO = async (req, res) => {
 // GET ALL WITEL WITH DATEL INSIDE
 exports.getAllWitel = async (req, res) => {
   let query;
-  req.query.witel == null ?
-    (query = {}) :
-    (query = {
-      WITEL: req.query.witel
-    });
+  req.query.witel == null
+    ? (query = {})
+    : (query = {
+        WITEL: req.query.witel
+      });
   witelModel
     .find(query, {
       _id: 0
@@ -109,7 +109,7 @@ exports.getAllWitel = async (req, res) => {
 };
 
 groupOverviewData = (datas, secondData) => {
-  let result = {}
+  let result = {};
 
   datas.map(data => {
     result[data._id] = {
@@ -120,34 +120,33 @@ groupOverviewData = (datas, secondData) => {
         102: 0,
         200: 0,
         400: 0,
-        1000: 0,
+        1000: 0
       }
-    }
-  })
+    };
+  });
 
   secondData.map(data => {
-    const currentData = result[data._id.location]
+    const currentData = result[data._id.location];
     result[data._id.location] = {
       ...currentData,
       statusCount: {
         ...currentData.statusCount,
         [data._id.status.code]: data.count
       }
-    }
-  })
+    };
+  });
 
-  let finalResult = []
+  let finalResult = [];
 
   Object.keys(result).map(key => {
     finalResult.push({
       _id: key,
       ...result[key]
-    })
-  })
+    });
+  });
 
-
-  return finalResult
-}
+  return finalResult;
+};
 
 exports.improvedOverview = async (req, res) => {
   const {
@@ -176,23 +175,25 @@ exports.improvedOverview = async (req, res) => {
         }
       }
     }]).then(typeCounts => {
-      reportModel.aggregate([{
-        $group: {
-          _id: "$alproType",
-          count: {
-            $sum: 1
-          }
-        }
-      }]).then(typeCount => {
-        res.status(200).send({
-          data: groupOverviewData(data, typeCounts),
-          typeCount
-        })
-      })
-    })
-  })
-
-
+          reportModel
+            .aggregate([
+              {
+                $group: {
+                  _id: "$alproType",
+                  count: {
+                    $sum: 1
+                  }
+                }
+              }
+            ])
+            .then(typeCount => {
+              res.status(200).send({
+                data: groupOverviewData(data, typeCounts),
+                typeCount
+              });
+            });
+        });
+    });
 
   // await witelModel
   //   .find(query)
