@@ -149,47 +149,32 @@ groupOverviewData = (datas, secondData) => {
 };
 
 exports.improvedOverview = async (req, res) => {
-  const { witel } = req.query;
+  const {
+    filterBy
+  } = req.query;
   const status = utilStatus.getAllStatus();
-  let listWitel = [],
-    tempWitel = [],
-    tempDatel = [],
-    tempStatus = [],
-    query = {};
 
-  !witel
-    ? (query = {})
-    : (query = {
-        WITEL: witel
-      });
+  const filter = {Semua:"reg", TREG:"witel", WITEL:'datel'}
 
-  reportModel
-    .aggregate([
-      {
-        $group: {
-          _id: "$location.witel",
-          count: {
-            $sum: 1
-          }
+  reportModel.aggregate([{
+    $group: {
+      _id: `$location.${filter[filterBy]}`,
+      count: {
+        $sum: 1
+      }
+    },
+  }]).then(data => {
+    reportModel.aggregate([{
+      $group: {
+        _id: {
+          location: `$location.${filter[filterBy]}`,
+          status: "$status"
+        },
+        count: {
+          $sum: 1
         }
       }
-    ])
-    .then(data => {
-      reportModel
-        .aggregate([
-          {
-            $group: {
-              _id: {
-                location: "$location.witel",
-                status: "$status"
-              },
-              count: {
-                $sum: 1
-              }
-            }
-          }
-        ])
-        .then(typeCounts => {
+    }]).then(typeCounts => {
           reportModel
             .aggregate([
               {
