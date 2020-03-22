@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const odpModelNew = require("../../models/odp/newOdp");
+const odpModel = require("../../models/odp");
 
 exports.closestODP = (req, res) => {
   const { latitude, longitude } = req.query;
@@ -60,6 +61,28 @@ exports.addNewODP = (req, res) => {
     .catch(err => {
       res.status(400).send({
         message: "Gagal menambahkan ODP baru."
+      });
+    });
+};
+
+exports.checkODP = (req, res) => {
+  const { odpName } = req.query;
+
+  let query = {
+    ODP_NAME: odpName
+  };
+
+  odpModel
+    .find(query, { _id: 0 })
+    .exec()
+    .then(response => {
+      res.status(200).send({
+        data: response
+      });
+    })
+    .catch(response => {
+      res.send({
+        data: response
       });
     });
 };

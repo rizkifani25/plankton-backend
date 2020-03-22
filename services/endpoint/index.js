@@ -19,6 +19,7 @@ exports.ALPROS_DESC = "/alpros/desc";
 // odp
 exports.LIST_ODP = "/odp";
 exports.ADD_NEW_ODP = "/odp/add-new";
+exports.CHECK_ODP = "/odp/check";
 
 // validator
 exports.GET_LIST_ALL_REPORT = "/reports";
