@@ -28,6 +28,7 @@ const alprosDescRouter = require("./routes/alpro-desc");
 // list odp
 const odpRouter = require("./routes/odp");
 const addNewODPRouter = require("./routes/odp/addNew");
+const checkODPRouter = require("./routes/odp/check");
 
 // report
 const createReportRouter = require("./routes/report/create-report");
@@ -115,6 +116,7 @@ app.use(endpoint.ALPROS_DESC, alprosDescRouter);
 // odp
 app.use(endpoint.LIST_ODP, odpRouter);
 app.use(endpoint.ADD_NEW_ODP, addNewODPRouter);
+app.use(endpoint.CHECK_ODP, checkODPRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
