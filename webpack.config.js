@@ -40,7 +40,7 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: "./index.html",
       filename: "./index.html",
-      excludeChunks: ["server"]
+      excludeChunks: ["www"]
     })
   ]
 };
